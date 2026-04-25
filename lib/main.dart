@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,8 +26,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => OnboardingViewModel()),
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
     ChangeNotifierProvider(create: (_) => LogViewModel()),
-        ChangeNotifierProvider(create: (_) => FoodIntakeViewModel()),
         ChangeNotifierProvider(create: (_) => DailyHabitViewModel()),
+        ChangeNotifierProvider(create: (_) => HomeViewModel()),
+        ChangeNotifierProvider(create: (_) => NavbarViewModel()),
+        ChangeNotifierProvider(create: (_) => RecentLogViewModel()),
+        ChangeNotifierProvider(create: (_) => WeeklySummaryViewModel()),
+        ChangeNotifierProvider(create: (_) => BodyInsightViewModel()),
+        ChangeNotifierProvider(create: (_) => ProfileViewModel()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 844),
@@ -43,7 +47,7 @@ class MyApp extends StatelessWidget {
                scaffoldBackgroundColor: AppColors.bg,
               // primaryColor: AppColors.primary,
             ),
-            initialRoute: '/login',
+            initialRoute: '/log',
 
             // daftar route
             routes: {
@@ -51,6 +55,9 @@ class MyApp extends StatelessWidget {
               '/register': (context) => const RegisterPage(),
               '/onboarding': (context) => const OnboardingScreen(),
               '/log': (context) => Log(),
+              '/home': (context) => HomeView(),
+              '/weekly': (context) => WeeklyReportPage(),
+              '/profil': (context) => ProfileView(),
             },
           );
         },

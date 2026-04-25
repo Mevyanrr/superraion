@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class NavbarViewModel extends ChangeNotifier {
-  int _selectedIndex = 0;
+  int _currentIndex = 0;
+  int get currentIndex => _currentIndex;
 
-  int get selectedIndex => _selectedIndex;
-
-  void updateIndex(int index) {
-    _selectedIndex = index;
-    notifyListeners();
+  void setIndex(int index) {
+    if (_currentIndex != index) {
+      _currentIndex = index;
+      notifyListeners();
+    }
   }
 }
-

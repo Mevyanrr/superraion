@@ -17,10 +17,10 @@ class OnboardingViewModel extends ChangeNotifier {
   late AnimationController _controller;
 
   final List<OnboardingData> items = [
-    OnboardingData(title: "Onboarding1", description: "Deskripsi 1", imagePath: 'assets/images/onboarding0.png'),
-    OnboardingData(title: "Onboarding2", description: "Deskripsi 2", imagePath: 'assets/images/onboarding1.png'),
-    OnboardingData(title: "Onboarding3", description: "Deskripsi 3", imagePath: 'assets/images/onboarding2.png'),
-    OnboardingData(title: "Onboarding4", description: "Deskripsi 4", imagePath: 'assets/images/onboarding3.png'),
+    OnboardingData(title: "Hear Your Skin", description: "Your breakouts might be linked to your gut health", imagePath: 'assets/images/onboarding0.png'),
+    OnboardingData(title: "It Starts Within", description: "Hair fall can be a sign your gut needs attention", imagePath: 'assets/images/onboarding1.png'),
+    OnboardingData(title: "Not Just Food", description: "Your gut plays a key role in weight balance", imagePath: 'assets/images/onboarding2.png'),
+    OnboardingData(title: "Gut Shapes Mood", description: "Anxious or low? Your gut might be the reason", imagePath: 'assets/images/onboarding3.png'),
   ];
 
   void initAnimation(TickerProvider vsync) {
