@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
                scaffoldBackgroundColor: AppColors.bg,
               // primaryColor: AppColors.primary,
             ),
-            initialRoute: '/profil',
+            initialRoute: '/home',
 
             routes: {
               '/login': (context) => LoginPage(),
