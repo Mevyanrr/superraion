@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:superraion/features/auth/view/login.dart';
 import 'package:superraion/features/auth/view/registrasi.dart';
+import 'package:superraion/features/log/widget/food_intake.dart';
+import 'package:superraion/features/log/widget/logPage.dart';
 
 import 'features/auth/viewmodel/auth_view_model.dart';
 import 'features/onboarding/view/onboarding.dart';
@@ -38,10 +40,20 @@ class MyApp extends StatelessWidget {
               // scaffoldBackgroundColor: AppColors.background,
               // primaryColor: AppColors.primary,
             ),
-            home: RegisterPage(),
+            home: TodayLogPage(),
           );
         },
       ),
+    );
+  }
+}
+
+class tesAja extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+      body: FoodIntake(),
     );
   }
 }

@@ -1,34 +1,62 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+import 'package:superraion/features/log/model/log/habit_model.dart';
 
-import '../model/log/symptom_model.dart';
-
-class SymptomLog {
+class HabitLog {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   User? user;
 
-  Future<bool> saveSymptom(Map<String, String?> bodySignals) async {
+  Future<bool> saveHabit({
+    required String tidurMulai,
+    required String tidurSelesai,
+    required double durasiJam,
+    String? relaxed,
+    String? moderate,
+    String? stresshigh,
+    String? stresslow,
+    String? active,
+    String? light,
+    String? none,
+    String? energyhigh,
+    String? energylow,
+  }) async {
     user = auth.currentUser;
     if (user == null) return false;
 
     try {
-      final model = SymptomModel.fromSignals(bodySignals);
+      final model = HabitModel(
+        tidurMulai: tidurMulai,
+        tidurSelesai: tidurSelesai,
+        durasiJam: durasiJam,
+        logDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        createdAt: DateTime.now(),
+        relaxed: relaxed,
+        moderate: moderate,
+        stresshigh: stresshigh,
+        stresslow: stresslow,
+        active: active,
+        light: light,
+        none: none,
+        energyhigh: energyhigh,
+        energylow: energylow,
+      );
 
       await firestore
           .collection('user_superraion')
           .doc(user!.uid)
-          .collection('symptom_log')
+          .collection('habit_log')
           .add(model.toMap());
 
       return true;
     } catch (e) {
-      print('gagal simpan symptom: $e');
+      print('gagal $e');
       return false;
     }
   }
 
-  Future<List<Map<String, dynamic>>> getSymptomLog() async {
+  Future<List<Map<String, dynamic>>> getHabitLog() async {
     user = auth.currentUser;
     if (user == null) return [];
 
@@ -36,7 +64,7 @@ class SymptomLog {
       QuerySnapshot snapshot = await firestore
           .collection('user_superraion')
           .doc(user!.uid)
-          .collection('symptom_log')
+          .collection('habit_log')
           .get();
 
       final list = snapshot.docs.map((doc) => {
@@ -54,28 +82,6 @@ class SymptomLog {
     } catch (e) {
       print('pengambilan data gagal: $e');
       return [];
-    }
-  }
-
-  Future<Map<String, dynamic>?> getSymptomByDate(String date) async {
-    user = auth.currentUser;
-    if (user == null) return null;
-
-    try {
-      QuerySnapshot snapshot = await firestore
-          .collection('user_superraion')
-          .doc(user!.uid)
-          .collection('symptom_log')
-          .where('date', isEqualTo: date)
-          .limit(1)
-          .get();
-
-      if (snapshot.docs.isEmpty) return null;
-      final doc = snapshot.docs.first;
-      return {'id': doc.id, ...doc.data() as Map<String, dynamic>};
-    } catch (e) {
-      print('get symptom by date gagal: $e');
-      return null;
     }
   }
 }
