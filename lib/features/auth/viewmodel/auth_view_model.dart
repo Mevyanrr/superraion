@@ -20,14 +20,6 @@ class AuthViewModel extends ChangeNotifier {
   String? regPasswordError;
   String? regConfirmPasswordError;
 
-  String name = "";
-  String email = "";
-  String password = "";
-  String confirmPassword = "";
-
-  String loginName = "";
-  String loginPassword = "";
-
   // --- TOGGLE VISIBILITY METHODS ---
   void toggleLoginPass() {
     isLoginPassObscured = !isLoginPassObscured;
@@ -53,48 +45,46 @@ class AuthViewModel extends ChangeNotifier {
 
   // --- AUTO-HEALING LOGIC (Login) ---
   void onLoginNameChanged(String val) {
-    loginName = val; // Simpan ke variabel
-    if (loginNameError != null) loginNameError = null;
-    notifyListeners();
+    if (loginNameError != null) {
+      loginNameError = null;
+      notifyListeners();
+    }
   }
 
   void onLoginPasswordChanged(String val) {
-    loginPassword = val; // Simpan ke variabel
-    if (loginPasswordError != null) loginPasswordError = null;
-    notifyListeners();
+    if (loginPasswordError != null) {
+      loginPasswordError = null;
+      notifyListeners();
+    }
   }
 
-// --- TAMBAHKAN GETTER INI ---
-  bool get isLoginValid {
-    // Tombol aktif jika field tidak kosong (dan error null)
-    return loginName.isNotEmpty &&
-        loginPassword.isNotEmpty &&
-        loginNameError == null &&
-        loginPasswordError == null;
-  }
-
+  // --- AUTO-HEALING LOGIC (Register) ---
   void onRegNameChanged(String val) {
-    name = val; // Simpan ke variabel
-    if (regNameError != null) regNameError = null;
-    notifyListeners();
+    if (regNameError != null) {
+      regNameError = null;
+      notifyListeners();
+    }
   }
 
   void onEmailChanged(String val) {
-    email = val; // Simpan ke variabel
-    if (emailError != null) emailError = null;
-    notifyListeners();
+    if (emailError != null) {
+      emailError = null;
+      notifyListeners();
+    }
   }
 
   void onRegPasswordChanged(String val) {
-    password = val; // Simpan ke variabel
-    if (regPasswordError != null) regPasswordError = null;
-    notifyListeners();
+    if (regPasswordError != null) {
+      regPasswordError = null;
+      notifyListeners();
+    }
   }
 
   void onRegConfirmPasswordChanged(String val) {
-    confirmPassword = val; // Simpan ke variabel
-    if (regConfirmPasswordError != null) regConfirmPasswordError = null;
-    notifyListeners();
+    if (regConfirmPasswordError != null) {
+      regConfirmPasswordError = null;
+      notifyListeners();
+    }
   }
 
   // --- VALIDATION LOGIC: LOGIN ---
@@ -119,17 +109,14 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   // --- VALIDATION LOGIC: REGISTER ---
-  // Hapus parameter di dalam kurung
-  bool validateRegister() {
+  bool validateRegister({
+    required String name,
+    required String email,
+    required String password,
+    required String confirmPassword,
+  }) {
     bool isValid = true;
 
-    // Reset semua error terlebih dahulu
-    regNameError = null;
-    emailError = null;
-    regPasswordError = null;
-    regConfirmPasswordError = null;
-
-    // Validasi menggunakan variabel class (this.name, this.email, dst)
     if (name.isEmpty) {
       regNameError = "Nama lengkap wajib diisi";
       isValid = false;
@@ -137,6 +124,11 @@ class AuthViewModel extends ChangeNotifier {
 
     if (email.isEmpty || !email.contains('@')) {
       emailError = "Email tidak valid";
+      isValid = false;
+    }
+
+    if (selectedBirthDate == null) {
+      regDateError = "Pilih tanggal lahir";
       isValid = false;
     }
 
@@ -150,9 +142,10 @@ class AuthViewModel extends ChangeNotifier {
       isValid = false;
     }
 
-    notifyListeners(); // Wajib agar UI terupdate
+    notifyListeners();
 
     if (isValid) {
+      // Tambahkan logika API register di sini jika perlu
       debugPrint("Register Berhasil!");
     }
 
@@ -169,17 +162,5 @@ class AuthViewModel extends ChangeNotifier {
     regPasswordError = null;
     regConfirmPasswordError = null;
     notifyListeners();
-  }
-
-  // Di dalam class AuthViewModel
-  bool get isRegisterValid {
-    return name.isNotEmpty &&
-        email.isNotEmpty &&
-        password.isNotEmpty &&
-        confirmPassword.isNotEmpty &&
-        regNameError == null &&
-        emailError == null &&
-        regPasswordError == null &&
-        regConfirmPasswordError == null;
   }
 }

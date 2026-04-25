@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../../../core/constants/app_color.dart';
 import '../viewmodel/auth_view_model.dart';
 
@@ -19,13 +20,14 @@ class _RegisterPageState extends State<RegisterPage> {
   final passCtrl = TextEditingController();
   final confirmCtrl = TextEditingController();
 
+  final Color primaryBlue = const Color(0xFF9CB1E6);
 
   @override
   Widget build(BuildContext context) {
     final vm = Provider.of<AuthViewModel>(context);
 
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -34,19 +36,19 @@ class _RegisterPageState extends State<RegisterPage> {
                 children: [
                   Image.asset(
                     'assets/images/vector2.png',
-                    color: AppColors.pinkMedium,
+                    color: AppColors.primaryBlue,
                     colorBlendMode: BlendMode.srcIn,
                     scale: 0.8,
                   ),
                   Positioned(
                       top: 0,
                       right: 0,
-                      child: Image.asset('assets/images/Ellipse_56.png', color: AppColors.pinkMedium,
+                      child: Image.asset('assets/images/Ellipse_56.png', color: AppColors.primaryBlue,
                         colorBlendMode: BlendMode.srcIn,)),
                   Positioned(
                     top: 20,
                     left: 10,
-                    child: Image.asset('assets/images/Ellipse_53.png', color: AppColors.pinkMedium,
+                    child: Image.asset('assets/images/Ellipse_53.png', color: AppColors.primaryBlue,
                       colorBlendMode: BlendMode.srcIn,),
                   ),
                 ]
@@ -69,7 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Text(
                     "Buat akun dengan menggunakan\nemail dan nomor telepon",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14.sp, color: AppColors.textBlack),
+                    style: TextStyle(fontSize: 14.sp, color: Colors.black54),
                   ),
 
                   SizedBox(height: 25.h),
@@ -117,16 +119,16 @@ class _RegisterPageState extends State<RegisterPage> {
                     width: double.infinity,
                     height: 52.h,
                     child: ElevatedButton(
-                      onPressed: vm.isRegisterValid
-                          ? () {
-                        vm.validateRegister();
-                      }
-                          : null,
+                      onPressed: () {
+                        vm.validateRegister(
+                          name: nameCtrl.text,
+                          email: emailCtrl.text,
+                          password: passCtrl.text,
+                          confirmPassword: confirmCtrl.text,
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.pinkDark,
-
-                        disabledBackgroundColor: AppColors.pinkMedium,
-
+                        backgroundColor: primaryBlue.withOpacity(0.8),
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.r),
@@ -136,7 +138,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         "Daftar",
                         style: TextStyle(
                           fontSize: 16.sp,
-                          color: AppColors.textWhite,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -152,12 +154,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Sudah punya akun? ", style: TextStyle(fontSize: 14.sp)),
+                      const Text("Sudah punya akun? "),
                       GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, '/login'),
+                        onTap: () => Navigator.pop(context),
                         child: Text(
-                            "Login",
-                            style: TextStyle(color: AppColors.pinkMedium, fontWeight: FontWeight.bold, fontSize: 14.sp)
+                          "Masuk",
+                          style: TextStyle(
+                            color: const Color(0xFF4C66CD),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
@@ -218,7 +223,7 @@ class _RegisterPageState extends State<RegisterPage> {
           icon: Icon(
             isObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
             size: 20.w,
-            color: Colors.grey,
+            color: Colors.black87,
           ),
           onPressed: toggle,
         ),
@@ -226,6 +231,43 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  Widget _buildDatePicker(BuildContext context, AuthViewModel vm) {
+    return GestureDetector(
+      onTap: () async {
+        DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: DateTime(2000),
+          firstDate: DateTime(1950),
+          lastDate: DateTime.now(),
+        );
+        if (picked != null) vm.setBirthDate(picked);
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: vm.regDateError != null ? Colors.red : Colors.grey[300]!,
+          ),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              vm.selectedBirthDate == null
+                  ? "Pilih Tanggal Lahir"
+                  : DateFormat('dd/MM/yyyy').format(vm.selectedBirthDate!),
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: vm.selectedBirthDate == null ? Colors.grey : Colors.black,
+              ),
+            ),
+            Icon(Icons.calendar_month_outlined, color: Colors.grey, size: 20.w),
+          ],
+        ),
+      ),
+    );
+  }
 
   InputDecoration _inputDecoration(String hint, String? error) {
     return InputDecoration(
@@ -239,7 +281,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: BorderSide(color: AppColors.pinkMedium, width: 1.5),
+        borderSide: BorderSide(color: primaryBlue, width: 1.5),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
@@ -256,11 +298,11 @@ class _RegisterPageState extends State<RegisterPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _socialIconBox('assets/images/apple.png'),
+        _socialIconBox('assets/icons/apple.png'),
         SizedBox(width: 15.w),
-        _socialIconBox('assets/images/google.png'),
+        _socialIconBox('assets/icons/google.png'),
         SizedBox(width: 15.w),
-        _socialIconBox('assets/images/facebook.png'),
+        _socialIconBox('assets/icons/facebook.png'),
       ],
     );
   }
