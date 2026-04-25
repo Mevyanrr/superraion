@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:intl/intl.dart';
 import 'package:superraion/features/auth/model/user_model.dart';
 
 class AuthService {
@@ -133,6 +134,63 @@ class AuthService {
 
     }catch(e){
       log("Error $e");
+    }
+  }
+
+  Future<UserModel?> getUser() async {
+    final user = firebaseAuth.currentUser;
+    if (user == null) return null;
+
+    try {
+      final doc = await firestore
+          .collection('user_superraion')
+          .doc(user.uid)
+          .get();
+
+      if (!doc.exists) return null;
+
+      return UserModel.fromMap(doc.data()!);
+    } catch (e) {
+      log("Error getUser: $e");
+      return null;
+    }
+  }
+
+  Future<int> getUserStreak() async {
+    final user = firebaseAuth.currentUser;
+    if (user == null) return 0;
+
+    try {
+      final snapshot = await firestore
+          .collection('user_superraion')
+          .doc(user.uid)
+          .collection('food_log')
+          .get();
+
+
+      final loggedDates = snapshot.docs
+          .map((doc) => doc.data()['log_date'] as String?)
+          .whereType<String>()
+          .toSet();
+
+
+      int streak = 0;
+      DateTime checkDate = DateTime.now();
+
+      while (true) {
+        final dateStr = DateFormat('yyyy-MM-dd').format(checkDate);
+        if (loggedDates.contains(dateStr)) {
+          streak++;
+          checkDate = checkDate.subtract(const Duration(days: 1));
+        } else {
+          break;
+        }
+      }
+
+      return streak;
+    } catch (e) {
+      log("Error getUserStreak: $e");
+      return 0;
     }
   }
 }

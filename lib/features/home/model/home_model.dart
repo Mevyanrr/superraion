@@ -25,10 +25,10 @@ class HomeDataModel {
 }
 
 class WeeklySummaryModel {
-  final List<double> symptomLevels; //Data dari AI
-  final String topFood;             //Data dari Backend
-  final String insight;             // ata dari Backend
-  final List<String> days;          //7 hari terakhir
+  final List<double> symptomLevels;
+  final String topFood;
+  final String insight;
+  final List<String> days;
 
   WeeklySummaryModel({
     required this.symptomLevels,

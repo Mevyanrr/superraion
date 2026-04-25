@@ -68,6 +68,16 @@ class _LogState extends State<Log> {
     },
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<LogViewModel>().reset();
+      context.read<FoodIntakeViewModel>().reset();
+      context.read<DailyHabitViewModel>().reset();
+    });
+  }
+
   Future<void> _handleSave() async {
     setState(() => _isSaving = true);
 
@@ -160,7 +170,7 @@ class _LogState extends State<Log> {
                           ),
                           child: Center(
                             child: IconButton(
-                              onPressed: () => Navigator.pop(context),
+                              onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
                               icon: Icon(Icons.arrow_back_ios, color: AppColors.pinkMedium, size: 18.sp),
                               padding: EdgeInsets.zero,
                               constraints: const BoxConstraints(),

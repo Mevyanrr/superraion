@@ -61,6 +61,8 @@ class LogViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+
+
   // Konversi index → string label untuk dikirim ke API
   Map<String, String?> get bodySignals {
     const labelMap = {
@@ -77,9 +79,15 @@ class LogViewModel extends ChangeNotifier {
       return MapEntry(key, idx != null ? labels[idx] : null);
     });
   }
+  void reset() {
+    _selectedDate = DateTime.now();
+    _currentMl = 0.0;
+    _selectedOptions.clear();
+    notifyListeners();
+  }
 }
 
-// ─── FOOD ─────────────────────────────────────────────
+
 class FoodIntakeViewModel extends ChangeNotifier {
   final List<FoodCategory> _categories = [
     'Protein', 'Refined', 'Supplements',
@@ -115,6 +123,15 @@ class FoodIntakeViewModel extends ChangeNotifier {
   void dispose() {
     detailsController.dispose();
     super.dispose();
+  }
+
+  void reset() {
+    for (var cat in _categories) {
+      cat.isSelected = false;
+    }
+    _pressingCategories.clear();
+    detailsController.clear();
+    notifyListeners();
   }
 }
 
@@ -181,5 +198,39 @@ class DailyHabitViewModel extends ChangeNotifier {
     if (index == 0) return const Color(0xFF2E7D32);
     if (index == 1) return const Color(0xFFF57F17);
     return const Color(0xFFC62828);
+  }
+
+  void reset() {
+    _habit.sleepTime = const TimeOfDay(hour: 22, minute: 0);
+    _habit.wakeUpTime = const TimeOfDay(hour: 7, minute: 0);
+    _habit.stressIndex = -1;
+    _habit.exerciseIndex = -1;
+    _habit.caffeineIndex = -1;
+    notifyListeners();
+  }
+}
+
+class RecentLogViewModel extends ChangeNotifier {
+
+  RecentLogModel? _recentLog = RecentLogModel(
+    mealName: "Chicken Salad",
+    timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+  );
+
+  RecentLogModel? get recentLog => _recentLog;
+
+  String getTimeAgo() {
+    if (_recentLog == null) return "No logs yet";
+    final diff = DateTime.now().difference(_recentLog!.timestamp);
+
+    if (diff.inHours >= 1) {
+      return "${diff.inHours} h ago";
+    } else {
+      return "${diff.inMinutes} m ago";
+    }
+  }
+
+  void navigateToDetail(BuildContext context) {
+
   }
 }

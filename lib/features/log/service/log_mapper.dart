@@ -114,4 +114,28 @@ class LogMapper {
     if (none != null) return 0.0;
     return 0.0;
   }
+
+  // Tambahkan method ini di class LogMapper
+  static double scoreFromLabel(String category, dynamic label) {
+    if (label == null) return 0.0;
+    final val = label.toString();
+    switch (category) {
+      case 'Acne':
+        return val == 'Clear' ? 0.0 : val == 'Mild' ? 1.0 : 2.0;
+      case 'Hair Loss':
+        return val == 'Normal' ? 0.0 : val == 'Increased' ? 1.0 : 2.0;
+      case 'Bloating Level':
+        return val == 'None' ? 0.0 : val == 'Mild' ? 1.0 : 2.0;
+      case 'Energy Level':
+        return val == 'High' ? 2.0 : val == 'Okay' ? 1.0 : 0.0;
+      case 'Mood':
+        return val == 'Stable' ? 0.0 : val == 'Fluctuating' ? 1.0 : 2.0;
+      case 'Weight':
+        return val == 'Stable' ? 0.0 : val == 'Slight' ? 1.0 : 2.0;
+      case 'Digestion':
+        return val == 'Normal' ? 0.0 : val == 'Irregular' ? 1.0 : 2.0;
+      default:
+        return 0.0;
+    }
+  }
 }

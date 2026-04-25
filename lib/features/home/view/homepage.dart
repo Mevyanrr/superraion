@@ -21,15 +21,10 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    // Simulasi data dari Auth & Database
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HomeViewModel>().initHomeData(
-          "Kamilia Luthfitah",
-          [DateTime.now().subtract(const Duration(days: 1)), DateTime.now().subtract(const Duration(days: 2))]
-      );
+      context.read<HomeViewModel>().loadFromFirestore();
       context.read<WeeklySummaryViewModel>().fetchWeeklyData();
-    }
-    );
+    });
   }
 
   @override
