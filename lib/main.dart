@@ -16,8 +16,13 @@ import 'features/auth/viewmodel/auth_view_model.dart';
 import 'features/log/viewmodel/log_viewmodel.dart';
 import 'features/onboarding/view/onboarding.dart';
 import 'features/onboarding/viewmodel/onboarding_viewmodel.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await initializeDateFormatting('id_ID', null);
+
   runApp(const MyApp());
 }
 
@@ -38,6 +43,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => WeeklySummaryViewModel()),
         ChangeNotifierProvider(create: (_) => BodyInsightViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileViewModel()),
+        ChangeNotifierProvider(create: (_) => WeeklyAnalysisViewModel()),
+        ChangeNotifierProvider(create: (_) => WeeklyReportViewModel()),
+        ChangeNotifierProvider(create: (_) => MedicalNoteViewModel()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 844),
@@ -52,7 +60,7 @@ class MyApp extends StatelessWidget {
                scaffoldBackgroundColor: AppColors.bg,
               // primaryColor: AppColors.primary,
             ),
-            initialRoute: '/home',
+            initialRoute: '/weekly',
 
             routes: {
               '/login': (context) => LoginPage(),
@@ -69,3 +77,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
