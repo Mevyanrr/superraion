@@ -5,6 +5,8 @@ import 'package:superraion/features/weekly_report/viewmodel/weekly_report.dart';
 import 'package:superraion/features/weekly_report/widget/medical_note.dart';
 
 import '../../../core/constants/app_color.dart';
+import '../../home/viewmodel/home_viewmodel.dart';
+import '../../home/widget/weekly_summary.dart';
 import '../widget/body_story_card.dart';
 import '../widget/custom_appbar.dart';
 import '../widget/expert_insight_card.dart';
@@ -26,6 +28,7 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<BodyInsightViewModel>().fetchAIInsights();
       context.read<MedicalNoteViewModel>().fetchMedicalNote();
+      context.read<WeeklySummaryViewModel>().fetchWeeklyData();
     });
 
   }
@@ -54,6 +57,9 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
                 SizedBox(height: 20.h),
 
                 MedicalNoteCard(),
+                SizedBox(height: 20.h),
+
+                WeeklySummaryCard(),
                 SizedBox(height: 20.h),
 
                 buildMostConsumed(weeklyVm),
