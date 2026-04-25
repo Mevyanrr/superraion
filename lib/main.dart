@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:superraion/features/auth/view/login.dart';
 import 'package:superraion/features/auth/view/registrasi.dart';
-import 'package:superraion/features/log/widget/food_intake.dart';
-import 'package:superraion/features/log/widget/logPage.dart';
-
+import 'package:superraion/features/log/view/log.dart';
+import 'core/constants/app_color.dart';
 import 'features/auth/viewmodel/auth_view_model.dart';
+import 'features/log/viewmodel/log_viewmodel.dart';
 import 'features/onboarding/view/onboarding.dart';
 import 'features/onboarding/viewmodel/onboarding_viewmodel.dart';
 
@@ -26,6 +26,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => OnboardingViewModel()),
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
+    ChangeNotifierProvider(create: (_) => LogViewModel()),
+        ChangeNotifierProvider(create: (_) => DailyHabitViewModel()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 844),
@@ -37,23 +39,21 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               useMaterial3: true,
-              // scaffoldBackgroundColor: AppColors.background,
+               scaffoldBackgroundColor: AppColors.bg,
               // primaryColor: AppColors.primary,
             ),
-            home: TodayLogPage(),
+            initialRoute: '/log',
+
+            // daftar route
+            routes: {
+              '/login': (context) => LoginPage(),
+              '/register': (context) => const RegisterPage(),
+              '/onboarding': (context) => const OnboardingScreen(),
+              '/log': (context) => Log(),
+            },
           );
         },
       ),
-    );
-  }
-}
-
-class tesAja extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-      body: FoodIntake(),
     );
   }
 }

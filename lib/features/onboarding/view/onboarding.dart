@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:superraion/features/onboarding/view/parallax.dart';
+import '../../../core/constants/app_color.dart';
 import '../viewmodel/onboarding_viewmodel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -53,43 +54,58 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
             itemCount: vm.items.length,
             itemBuilder: (context, index) {
               final data = vm.items[index];
+              final bool isLastItem = index == vm.items.length - 1;
+
               return Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 30.w, vertical: 60.h),
+                padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 60.h),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      data.title,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 32.sp,
-                          fontWeight: FontWeight.bold
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                data.title,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 32.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 12.h),
+                              Text(
+                                data.description,
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 16.sp,
+                                  height: 1.5.h,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        if (!isLastItem) SizedBox(width: 20.w),
+
+                        if (!isLastItem) _buildNextArrow(vm),
+                      ],
                     ),
-                    SizedBox(height: 12.h),
-                    Text(
-                      data.description,
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16.sp,
-                        height: 1.5.h,
-                      ),
-                    ),
-                    SizedBox(height: 120.h),
+
+                    if (isLastItem) ...[
+                      SizedBox(height: 40.h),
+                      _buildStartButton(context),
+                      SizedBox(height: 20.h),
+                    ],
+
+                    if (!isLastItem) SizedBox(height: 60.h),
                   ],
                 ),
               );
             },
-          ),
-
-          Positioned(
-            bottom: 50.h,
-            left: 30.w,
-            right: 30.w,
-            child: isLastPage
-                ? _buildStartButton(context) //tombol halaman 4
-                : _buildNextArrow(vm),      //tombol halaman 1, 2, 3
           ),
         ],
       ),
@@ -100,11 +116,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        FloatingActionButton(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          onPressed: () => vm.nextPage(),
-          child: const Icon(Icons.arrow_forward_rounded, color: Colors.black),
+        GestureDetector(
+          onTap: () => vm.nextPage(),
+          child: Image.asset(
+            'assets/images/nextarrow.png',
+            width: 50.w,
+            height: 50.h,
+          ),
         ),
       ],
     );
@@ -115,18 +133,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          //NAVIGASI ABIS BUTTON MULAI BRO
+          Navigator.pushReplacementNamed(context, '/login');
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.pinkDark,
           foregroundColor: Colors.black,
-          padding: const EdgeInsets.symmetric(vertical: 18),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          padding: EdgeInsets.symmetric(vertical: 18.h),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
           elevation: 0,
         ),
-        child: const Text(
+        child: Text(
           "Mulai Sekarang",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp, color: AppColors.textWhite),
         ),
       ),
     );

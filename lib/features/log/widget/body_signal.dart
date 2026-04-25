@@ -1,155 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-class BodySignals extends StatefulWidget {
-  final void Function(Map<String, String?> signals)? onChanged;
-  const BodySignals({super.key, this.onChanged});
+import '../../../core/constants/app_color.dart';
+import '../viewmodel/log_viewmodel.dart';
+import 'card_signal.dart';
 
-  @override
-  State<BodySignals> createState() => _BodySignalsState();
-}
+class BodySignal extends StatelessWidget {
+  final String category;
+  final List<String> labels;
+  final List<String> images;
 
-class _BodySignalsState extends State<BodySignals> {
-  final Map<String, List<_Option>> _options = {
-    'Bloating Level': [
-      _Option('None', '😊'), _Option('Mild', '😐'), _Option('Severe', '😣'),
-    ],
-    'Energy Level': [
-      _Option('Low', '🪫'), _Option('Okay', '⚡'), _Option('High', '🔋'),
-    ],
-    'Acne': [
-      _Option('Clear', '✨'), _Option('Mild', '😕'), _Option('Severe', '😞'),
-    ],
-    'Mood': [
-      _Option('Stable', '😊'), _Option('Fluctuating', '😶'), _Option('Bad', '😔'),
-    ],
-    'Hair Loss': [
-      _Option('Normal', '💆'), _Option('Increased', '😟'), _Option('Heavy', '😰'),
-    ],
-    'Weight': [
-      _Option('Stable', '⚖️'), _Option('Slight', '📉'), _Option('High', '📈'),
-    ],
-    'Digestion': [
-      _Option('Normal', '✅'), _Option('Irregular', '⚠️'), _Option('Diarrhea', '🤢'),
-    ],
-  };
+  const BodySignal(this.category, this.labels, this.images);
 
-  final Map<String, int?> _selected = {};
+  Color getBgColor(int index) {
+    switch (index) {
+      case 0: return const Color(0xFFE7F4EC); // Green
+      case 1: return const Color(0xFFFFF8E2); // Yellow
+      case 2: return const Color(0xFFF9E4E7); // Red
+      default: return Colors.grey;
+    }
+  }
 
-  void _notify() {
-    final result = _options.map((key, opts) => MapEntry(
-      key,
-      _selected[key] != null ? opts[_selected[key]!].label : null,
-    ));
-    widget.onChanged?.call(result);
+  Color getTextColor(int index) {
+    switch (index) {
+      case 0: return const Color(0xFF2E7D32); // GreenText
+      case 1: return const Color(0xFFF9A825); // YellowText
+      case 2: return const Color(0xFFC62828); // RedText
+      default: return Colors.black;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 0.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Header
-          Row(
-            children: [
-              Container(
-                width: 36, height: 36,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEDE9FE),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.monitor_heart_outlined,
-                    color: Color(0xFF8B5CF6), size: 18),
-              ),
-              const SizedBox(width: 10),
-              const Text('Body Signals',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600,
-                      color: Color(0xFF111827))),
-            ],
-          ),
+    return Consumer<LogViewModel>(
+      builder: (context, vm, _) {
+        final selected = vm.getSelectedIndex(category);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
 
-          const SizedBox(height: 20),
-
-          ..._options.entries.map((entry) => Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(entry.key,
-                    style: const TextStyle(fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF111827))),
-                const SizedBox(height: 10),
-                Row(
-                  children: entry.value.asMap().entries.map((e) {
-                    final idx = e.key;
-                    final opt = e.value;
-                    final isSelected = _selected[entry.key] == idx;
-
-                    return Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() {
-                          _selected[entry.key] = isSelected ? null : idx;
-                          _notify();
-                        }),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 150),
-                          margin: EdgeInsets.only(
-                              right: idx < entry.value.length - 1 ? 8 : 0),
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? const Color(0xFFEDE9FE)
-                                : const Color(0xFFF9FAFB),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: isSelected
-                                  ? const Color(0xFF8B5CF6)
-                                  : const Color(0xFFE5E7EB),
-                              width: isSelected ? 1.5 : 1,
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Text(opt.emoji,
-                                  style: const TextStyle(fontSize: 24)),
-                              const SizedBox(height: 4),
-                              Text(opt.label,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: isSelected
-                                        ? FontWeight.w600
-                                        : FontWeight.w400,
-                                    color: isSelected
-                                        ? const Color(0xFF8B5CF6)
-                                        : const Color(0xFF6B7280),
-                                  )),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ],
+            Text(
+                category,
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)
             ),
-          )),
-        ],
-      ),
+            SizedBox(height: 10.h),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(3, (index) {
+                return Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    child: SignalCard(
+                      label: labels[index],
+                      imagePath: images[index],
+                      isSelected: selected == index,
+                      activeBgColor: getBgColor(index),
+                      activeTextColor: getTextColor(index),
+                      onTap: () => vm.selectOption(category, index),
+                    ),
+                  ),
+                );
+              }),
+            ),
+            SizedBox(height: 20.h),
+          ],
+        );
+      },
     );
   }
 }
 
-class _Option {
-  final String label;
-  final String emoji;
-  const _Option(this.label, this.emoji);
-}

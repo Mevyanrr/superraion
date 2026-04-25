@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:superraion/features/auth/view/login.dart';
 import '../../../core/constants/app_color.dart';
 import '../viewmodel/auth_view_model.dart';
 
@@ -120,20 +119,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     width: double.infinity,
                     height: 52.h,
                     child: ElevatedButton(
-                      onPressed: () async {
-                        bool success = await vm.validateRegister(
+                      onPressed: () {
+                        vm.validateRegister(
                           name: nameCtrl.text,
                           email: emailCtrl.text,
                           password: passCtrl.text,
                           confirmPassword: confirmCtrl.text,
                         );
-
-                        if(success){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => LoginPage()),
-                          );
-                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryBlue.withOpacity(0.8),

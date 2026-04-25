@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../core/constants/app_color.dart';
 
 class CustomTextField extends StatelessWidget {
   final String label;
   final String hint;
   final TextEditingController controller;
-  final bool isPassword;
   final TextInputType keyboardType;
-  final Widget? suffixIcon;
-  final bool readOnly;
-  final VoidCallback? onTap;
-  final String? Function(String?)? validator;
+  final bool isPassword;
+  final bool isObscured;
+  final VoidCallback? onToggleVisibility;
+  final String? errorText;
+  final Function(String)? onChanged;
+  final Color activeColor;
 
   const CustomTextField({
     required this.label,
     required this.hint,
     required this.controller,
-    this.isPassword = false,
+    required this.activeColor,
     this.keyboardType = TextInputType.text,
-    this.suffixIcon,
-    this.readOnly = false,
-    this.onTap,
-    this.validator,
+    this.isPassword = false,
+    this.isObscured = false,
+    this.onToggleVisibility,
+    this.errorText,
+    this.onChanged,
   });
 
   @override
@@ -28,33 +33,41 @@ class CustomTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
-        SizedBox(height: 8),
-        TextFormField(
+        Text(label, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp)),
+        SizedBox(height: 8.h),
+        TextField(
           controller: controller,
-          obscureText: isPassword,
           keyboardType: keyboardType,
-          readOnly: readOnly,
-          onTap: onTap,
-          validator: validator,
+          obscureText: isPassword && isObscured,
+          onChanged: onChanged,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+            hintStyle: TextStyle(color: Colors.grey, fontSize: 14.sp),
             filled: true,
-            fillColor: Colors.grey[50],
-            suffixIcon: suffixIcon,
-            border: _outlineInputBorder,
-            enabledBorder: _outlineInputBorder,
-            focusedBorder: _outlineInputBorder.copyWith(borderSide: BorderSide(color: Color(0xFF4C66CD))),
+            fillColor: Colors.white,
+            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+            suffixIcon: isPassword
+                ? IconButton(
+              icon: Icon(isObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined),
+              onPressed: onToggleVisibility,
+            )
+                : null,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: errorText != null ? AppColors.errorRed : Colors.grey[300]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: errorText != null ? AppColors.errorRed : activeColor, width: 1.5),
+            ),
           ),
         ),
-        SizedBox(height: 20),
+        if (errorText != null)
+          Padding(
+            padding: EdgeInsets.only(top: 4.h, left: 4.w),
+            child: Text(errorText!, style: TextStyle(color: AppColors.errorRed, fontSize: 12.sp)),
+          ),
       ],
     );
   }
-
-  static final _outlineInputBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(8),
-    borderSide: BorderSide(color: Colors.grey[300]!),
-  );
 }

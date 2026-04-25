@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../service/auth/auth_service.dart';
 
 class AuthViewModel extends ChangeNotifier {
   // --- STATE VISIBILITY ---
@@ -90,11 +88,11 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   // --- VALIDATION LOGIC: LOGIN ---
-  Future <bool> validateLogin(String email, String pass) async {
+  bool validateLogin(String username, String pass) {
     bool isValid = true;
 
-    if (email.isEmpty) {
-      loginNameError = "Email tidak boleh kosong";
+    if (username.isEmpty) {
+      loginNameError = "Username tidak boleh kosong";
       isValid = false;
     }
 
@@ -106,27 +104,17 @@ class AuthViewModel extends ChangeNotifier {
       isValid = false;
     }
 
-
-
-    if (!isValid) return false;
-    try{
-      await AuthService().loginWithEmail(email, pass);
-      debugPrint("login Berhasil!");
-      return true;
-    }catch(e){
-      debugPrint("login Gagal");
-      return false;
-    }
-
+    notifyListeners();
+    return isValid;
   }
 
   // --- VALIDATION LOGIC: REGISTER ---
-  Future <bool> validateRegister({
+  bool validateRegister({
     required String name,
     required String email,
     required String password,
     required String confirmPassword,
-  }) async {
+  }) {
     bool isValid = true;
 
     if (name.isEmpty) {
@@ -139,10 +127,10 @@ class AuthViewModel extends ChangeNotifier {
       isValid = false;
     }
 
-    // if (selectedBirthDate == null) {
-    //   regDateError = "Pilih tanggal lahir";
-    //   isValid = false;
-    // }
+    if (selectedBirthDate == null) {
+      regDateError = "Pilih tanggal lahir";
+      isValid = false;
+    }
 
     if (password.length < 8) {
       regPasswordError = "Minimal 8 karakter";
@@ -156,18 +144,12 @@ class AuthViewModel extends ChangeNotifier {
 
     notifyListeners();
 
-    if (!isValid) return false;
-      try{
-        await AuthService().signUpWithEmail(name,email, password);
-        await FirebaseAuth.instance.currentUser?.reload();
-        await AuthService().saveUser(name, selectedBirthDate?? DateTime.now());
-        debugPrint("Register Berhasil!");
-        return true;
-      }catch(e){
-        debugPrint("Register Gagal");
-        return false;
-      }
+    if (isValid) {
+      // Tambahkan logika API register di sini jika perlu
+      debugPrint("Register Berhasil!");
+    }
 
+    return isValid;
   }
 
   // --- RESET STATE ---

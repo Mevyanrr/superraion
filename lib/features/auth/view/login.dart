@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_color.dart';
-import '../../../core/widgets/custom_textfield.dart';
 import '../viewmodel/auth_view_model.dart';
+import '../widget/custom_textfield.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
@@ -26,19 +26,19 @@ class LoginPage extends StatelessWidget {
                 children: [
                   Image.asset(
                     'assets/images/vector.png',
-                    color: AppColors.primaryPink,
+                    color: AppColors.pinkMedium,
                     colorBlendMode: BlendMode.srcIn,
                     scale: 0.8,
                   ),
                   Positioned(
                       top: 0,
                       left: 270,
-                      child: Image.asset('assets/images/Ellipse_51.png', color: AppColors.primaryPink,
+                      child: Image.asset('assets/images/Ellipse_51.png', color: AppColors.pinkMedium,
                         colorBlendMode: BlendMode.srcIn,)),
                   Positioned(
                     bottom: 80,
                     left: 10,
-                    child: Image.asset('assets/images/Ellipse_53.png', color: AppColors.primaryPink,
+                    child: Image.asset('assets/images/Ellipse_53.png', color: AppColors.pinkMedium,
                       colorBlendMode: BlendMode.srcIn,),
                   ),
                   Positioned(
@@ -75,7 +75,7 @@ class LoginPage extends StatelessWidget {
                       hint: "Labubu@gmail.com",
                       controller: nameController,
                       keyboardType: TextInputType.text, // Ubah ke text kalau login pakai username
-                      activeColor: AppColors.primaryPink,
+                      activeColor: AppColors.pinkMedium,
                       errorText: vm.loginNameError, // PAKAI loginNameError, bukan regNameError
                       onChanged: vm.onLoginNameChanged, // PAKAI onLoginNameChanged
                     ),
@@ -89,7 +89,7 @@ class LoginPage extends StatelessWidget {
                       isPassword: true,
                       isObscured: vm.isLoginPassObscured,
                       onToggleVisibility: vm.toggleLoginPass,
-                      activeColor: AppColors.primaryPink,
+                      activeColor: AppColors.pinkMedium,
                       errorText: vm.loginPasswordError, // Tambahkan ini agar error password muncul
                       onChanged: vm.onLoginPasswordChanged, // Tambahkan ini agar error sembuh saat ngetik
                     ),
@@ -111,7 +111,7 @@ class LoginPage extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () => vm.validateLogin(nameController.text, passController.text),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryPink, // Saya buat full warna agar terlihat aktif
+                          backgroundColor: AppColors.pinkMedium, // Saya buat full warna agar terlihat aktif
                           elevation: 0,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
                         ),
@@ -137,7 +137,7 @@ class LoginPage extends StatelessWidget {
                           onTap: () => Navigator.pushNamed(context, '/register'),
                           child: Text(
                               "Daftar",
-                              style: TextStyle(color: AppColors.primaryPink, fontWeight: FontWeight.bold, fontSize: 14.sp)
+                              style: TextStyle(color: AppColors.pinkMedium, fontWeight: FontWeight.bold, fontSize: 14.sp)
                           ),
                         ),
                       ],

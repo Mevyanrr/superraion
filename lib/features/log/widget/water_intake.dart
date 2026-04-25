@@ -1,172 +1,171 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-class WaterIntake extends StatefulWidget {
-  final void Function(int ml)? onChanged;
-  const WaterIntake({super.key, this.onChanged});
+import '../../../core/constants/app_color.dart';
+import '../viewmodel/log_viewmodel.dart';
 
-  @override
-  State<WaterIntake> createState() => _WaterIntakeState();
-}
-
-class _WaterIntakeState extends State<WaterIntake> {
-  int _ml = 0;
-  final int _goal = 2700;
-  final int _step = 250;
-
-  double get _progress => (_ml / _goal).clamp(0.0, 1.0);
-
-  String get _level {
-    if (_progress < 0.33) return 'Low';
-    if (_progress < 0.66) return 'Medium';
-    return 'High';
-  }
+class WaterIntakeCard extends StatelessWidget {
+  const WaterIntakeCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<LogViewModel>();
+
     return Container(
-      padding: const EdgeInsets.all(20),
+      width: 350.w,
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 0.5),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: const Color(0xFFE8E8E8), width: 0.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10.r,
+            offset: const Offset(0, 4),
+          )
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: [
-
-          Row(
-            children: [
-              Container(
-                width: 36, height: 36,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE0F2FE),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.water_drop_outlined,
-                    color: Color(0xFF0EA5E9), size: 18),
-              ),
-              const SizedBox(width: 10),
-              const Text('Water Intake',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600,
-                      color: Color(0xFF111827))),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE0F2FE),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(_level,
-                    style: const TextStyle(fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF0EA5E9))),
-              ),
-            ],
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(left: 46, top: 2),
-            child: Text('Daily Goal: ${(_goal / 1000).toStringAsFixed(1)}L',
-                style: const TextStyle(fontSize: 12,
-                    color: Color(0xFF9CA3AF))),
-          ),
-
-          const SizedBox(height: 16),
-
-          Center(
-            child: Text('$_ml ML Logged',
-                style: const TextStyle(fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF0EA5E9))),
-          ),
-
-          const SizedBox(height: 12),
-
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: LinearProgressIndicator(
-              value: _progress,
-              minHeight: 8,
-              backgroundColor: const Color(0xFFE0F2FE),
-              valueColor: const AlwaysStoppedAnimation<Color>(
-                  Color(0xFF0EA5E9)),
-            ),
-          ),
-
-          const SizedBox(height: 6),
+          // Header Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Low • 0 L',
-                  style: TextStyle(fontSize: 11, color: Color(0xFF9CA3AF))),
-              Text('High • ${(_goal / 1000).toStringAsFixed(1)} L',
-                  style: const TextStyle(fontSize: 11,
-                      color: Color(0xFF9CA3AF))),
+              Row(
+                children: [
+                  _buildIcon(),
+                  SizedBox(width: 12.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Water Intake",
+                        style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1F1F1F)),
+                      ),
+                      Text(
+                        "Daily Goal: 2.5L",
+                        style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Text(
+                vm.status,
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600, color: const Color(0xFF4C84F3)),
+              ),
             ],
           ),
+          SizedBox(height: 24.h),
 
-          const SizedBox(height: 16),
+          // Total Amount Display
+          Center(
+            child: Text(
+              vm.formattedLiters,
+              style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF4C84F3)),
+            ),
+          ),
+          SizedBox(height: 16.h),
 
+          // Progress Bar
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10.r),
+            child: LinearProgressIndicator(
+              value: vm.progress, //nilai progress
+              minHeight: 12.h,
+
+              //warna track
+              backgroundColor: Color(0XFFEDF0FA),
+              //BIRU PROGRESSNYA
+              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF4C84F3)),
+            ),
+          ),
+          SizedBox(height: 12.h),
+
+          // Labels under progress bar
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildLabel("Low (<1L)"),
+              _buildLabel("Med (2.5L)"),
+              _buildLabel("High (>2L)"),
+            ],
+          ),
+          SizedBox(height: 24.h),
+
+          // Buttons
           Row(
             children: [
-              Expanded(child: _WaterButton(
-                label: '- $_step ML',
-                color: const Color(0xFFFF6B8A),
-                onTap: () => setState(() {
-                  _ml = (_ml - _step).clamp(0, _goal * 2);
-                  widget.onChanged?.call(_ml);
-                }),
-              )),
-              const SizedBox(width: 12),
-              Expanded(child: _WaterButton(
-                label: '+ $_step ML',
-                color: const Color(0xFF0EA5E9),
-                onTap: () => setState(() {
-                  _ml = (_ml + _step).clamp(0, _goal * 2);
-                  widget.onChanged?.call(_ml);
-                }),
-              )),
+              Expanded(child: _IntakeButton(label: "250 ML", onTap: vm.removeWater, isAdd: false)),
+              SizedBox(width: 16.w),
+              Expanded(child: _IntakeButton(label: "250 ML", onTap: vm.addWater, isAdd: true)),
             ],
           ),
         ],
       ),
     );
   }
+
+  Widget _buildIcon() {
+    return Container(
+      padding: EdgeInsets.all(10.w),
+      decoration: BoxDecoration(color: const Color(0xFFEAF2FF), shape: BoxShape.circle),
+      child: Icon(Icons.water_drop_outlined, color: const Color(0xFF4C84F3), size: 24.w),
+    );
+  }
+
+  Widget _buildLabel(String text) {
+    return Text(text, style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]));
+  }
 }
 
-class _WaterButton extends StatefulWidget {
+class _IntakeButton extends StatefulWidget {
   final String label;
-  final Color color;
   final VoidCallback onTap;
-  const _WaterButton({required this.label, required this.color,
-    required this.onTap});
+  final bool isAdd;
+
+  const _IntakeButton({required this.label, required this.onTap, required this.isAdd});
 
   @override
-  State<_WaterButton> createState() => _WaterButtonState();
+  State<_IntakeButton> createState() => _IntakeButtonState();
 }
 
-class _WaterButtonState extends State<_WaterButton> {
-  bool _pressing = false;
+class _IntakeButtonState extends State<_IntakeButton> {
+  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: (_) => setState(() => _pressing = true),
-      onTapUp: (_) { setState(() => _pressing = false); widget.onTap(); },
-      onTapCancel: () => setState(() => _pressing = false),
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) => setState(() => _isPressed = false),
+      onTapCancel: () => setState(() => _isPressed = false),
+      onTap: widget.onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 120),
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        duration: const Duration(milliseconds: 150),
+        height: 55.h,
         decoration: BoxDecoration(
-          color: _pressing ? widget.color : widget.color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: widget.color.withOpacity(0.4)),
+          color: _isPressed ? const Color(0xFF4C84F3) : const Color(0xFFF7F7F7),
+          borderRadius: BorderRadius.circular(25.r),
         ),
-        child: Center(
-          child: Text(widget.label,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,
-                  color: _pressing ? Colors.white : widget.color)),
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(widget.isAdd ? Icons.add : Icons.remove,
+                color: _isPressed ? Colors.white : Colors.grey[600], size: 20.w),
+            SizedBox(width: 8.w),
+            Text(
+              widget.label,
+              style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: _isPressed ? Colors.white : Colors.grey[700]
+              ),
+            ),
+          ],
         ),
       ),
     );
