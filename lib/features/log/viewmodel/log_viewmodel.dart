@@ -147,7 +147,6 @@ class DailyHabitViewModel extends ChangeNotifier {
     }
   }
 
-  // Update selection (Hanya boleh 1 per kategori)
   void setStress(int index) { _habit.stressIndex = index; notifyListeners(); }
   void setExercise(int index) { _habit.exerciseIndex = index; notifyListeners(); }
   void setCaffeine(int index) { _habit.caffeineIndex = index; notifyListeners(); }
@@ -155,16 +154,43 @@ class DailyHabitViewModel extends ChangeNotifier {
   // Get Colors based on Position (Index)
   Color getBgColor(int index, bool isSelected) {
     if (!isSelected) return const Color(0xFFF9FAFB);
-    if (index == 0) return const Color(0xFFE8F5E9); // Hijau muda
-    if (index == 1) return const Color(0xFFFFF9C4); // Kuning muda
-    return const Color(0xFFFFEBEE);                 // Merah muda
+    if (index == 0) return const Color(0xFFE8F5E9);
+    if (index == 1) return const Color(0xFFFFF9C4);
+    return const Color(0xFFFFEBEE);
   }
 
   Color getTextColor(int index, bool isSelected) {
-    if (!isSelected) return const Color(0xFF111827); // Hitam Default
-    if (index == 0) return const Color(0xFF2E7D32);  // Hijau tua
-    if (index == 1) return const Color(0xFFF57F17);  // Kuning/Oranye tua
-    return const Color(0xFFC62828);                  // Merah tua
+    if (!isSelected) return const Color(0xFF111827);
+    if (index == 0) return const Color(0xFF2E7D32);
+    if (index == 1) return const Color(0xFFF57F17);
+    return const Color(0xFFC62828);
+  }
+}
+
+
+
+class RecentLogViewModel extends ChangeNotifier {
+
+  RecentLogModel? _recentLog = RecentLogModel(
+    mealName: "Chicken Salad",
+    timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+  );
+
+  RecentLogModel? get recentLog => _recentLog;
+
+  String getTimeAgo() {
+    if (_recentLog == null) return "No logs yet";
+    final diff = DateTime.now().difference(_recentLog!.timestamp);
+
+    if (diff.inHours >= 1) {
+      return "${diff.inHours} h ago";
+    } else {
+      return "${diff.inMinutes} m ago";
+    }
+  }
+
+  void navigateToDetail(BuildContext context) {
+
   }
 }
 

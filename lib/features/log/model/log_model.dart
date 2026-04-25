@@ -35,9 +35,9 @@ class FoodCategory {
 class DailyHabitModel {
   TimeOfDay sleepTime;
   TimeOfDay wakeUpTime;
-  int? stressIndex;     // 0: Relaxed, 1: Moderate, 2: High
-  int? exerciseIndex;   // 0: Active, 1: Light, 2: None
-  int? caffeineIndex;   // 0: None, 1: Low, 2: High
+  int? stressIndex;
+  int? exerciseIndex;
+  int? caffeineIndex;
 
   DailyHabitModel({
     required this.sleepTime,
@@ -45,5 +45,16 @@ class DailyHabitModel {
     this.stressIndex,
     this.exerciseIndex,
     this.caffeineIndex,
+  });
+}
+
+//RECENT LOG
+class RecentLogModel {
+  final String mealName;
+  final DateTime timestamp;
+
+  RecentLogModel({
+    required this.mealName,
+    required this.timestamp,
   });
 }

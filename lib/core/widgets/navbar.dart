@@ -1,102 +1,149 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
+import 'dart:ui' as ui;
 import '../constants/app_color.dart';
 import '../viewmodel/navbar_viewmodel.dart';
 
-class CustomBottomNavbar extends StatelessWidget {
-  const CustomBottomNavbar({Key? key}) : super(key: key);
+class MainNavbarView extends StatelessWidget {
+  const MainNavbarView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<NavbarViewModel>(
-      builder: (context, vm, child) {
-        return Container(
-          margin: EdgeInsets.fromLTRB(20.w, 0, 20.w, 30.h),
-          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30.r),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10.sp,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Home Button
-              _buildNavItem(
-                context,
-                index: 0,
-                label: "Home",
-                icon: Icons.home,
-                isSelected: vm.selectedIndex == 0,
-              ),
+    final vm = context.watch<NavbarViewModel>();
 
-              // Edit Button (Center)
-              _buildCenterButton(context, isSelected: vm.selectedIndex == 1),
-
-              // Profile Button
-              _buildNavItem(
-                context,
-                index: 2,
-                label: "Profile",
-                icon: Icons.person_outline,
-                isSelected: vm.selectedIndex == 2,
+    return SizedBox(
+        height: 80.h,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            CustomPaint(
+              size: Size(MediaQuery.of(context).size.width, 80.h),
+              painter: NavbarPainter(),
+            ),
+            Center(
+              heightFactor: 0.6,
+              child: _buildFab(context, vm),
+            ),
+            SizedBox(
+              height: 80.h,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(context, 0, Icons.home_rounded, "Home", vm),
+                  const SizedBox(width: 40),
+                  _buildNavItem(context, 2, Icons.person_rounded, "Profile", vm),
+                ],
               ),
-            ],
-          ),
-        );
-      },
+            ),
+          ],
+        ),
+
     );
   }
 
-  Widget _buildNavItem(BuildContext context, {required int index, required String label, required IconData icon, required bool isSelected}) {
-    final vm = context.read<NavbarViewModel>();
-
-
-    final activeColor = AppColors.pinkDark;
-    final inactiveColor = Colors.grey;
+  Widget _buildFab(BuildContext context, NavbarViewModel vm) {
+    bool isSelected = vm.currentIndex == 1;
 
     return GestureDetector(
-      onTap: () => vm.updateIndex(index),
+      onTap: () {
+        vm.setIndex(1);
+      },
+      child: Container(
+        width: 56.w,
+        height: 56.w,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+
+          color: AppColors.pinkMedium,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black26,
+                blurRadius: isSelected ? 15 : 10,
+                offset: const Offset(0, 4)
+            )
+          ],
+        ),
+        child: Image.asset(
+          "assets/images/pencilmagic.png",
+          width: 5.w,
+          height: 5.w,
+        )
+      ),
+    );
+  }
+
+  Widget _buildNavItem(BuildContext context, int index, IconData icon, String label, NavbarViewModel vm) {
+    bool isSelected = vm.currentIndex == index;
+
+    return GestureDetector(
+      onTap: () => vm.setIndex(index),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: isSelected ? activeColor.withOpacity(0.1) : Colors.transparent,
+          color: isSelected ? AppColors.pinkMedium: Colors.transparent,
           borderRadius: BorderRadius.circular(20.r),
         ),
         child: Row(
           children: [
-            Icon(icon, color: isSelected ? activeColor : inactiveColor, size: 24.sp),
-            if (isSelected) SizedBox(width: 8.w),
-            if (isSelected) Text(label, style: TextStyle(color: activeColor, fontWeight: FontWeight.bold)),
+            Icon(icon, color: isSelected ? Colors.white : const Color(0xFF4B5563), size: 24.sp),
+            if (isSelected) ...[
+              SizedBox(width: 8.w),
+              Text(
+                label,
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14.sp),
+              ),
+            ],
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildCenterButton(BuildContext context, {required bool isSelected}) {
-    final vm = context.read<NavbarViewModel>();
-    return GestureDetector(
-      onTap: () => vm.updateIndex(1),
-      child: Container(
-        width: 50.w,
-        height: 50.w,
-        decoration: BoxDecoration(
-          color: AppColors.pinkDark,
-          shape: BoxShape.circle,
-          boxShadow: isSelected ? [BoxShadow(color: AppColors.pinkDark.withOpacity(0.3), blurRadius: 8)] : [],
-        ),
-        child: Icon(Icons.edit, color: Colors.white, size: 24.sp),
-      ),
+class NavbarPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()
+        ..color = Colors.white
+      ..style = PaintingStyle.fill;
+
+    final double midX = size.width / 2;
+    final double holeWidth = 90.0;
+    final double holeDepth = 55.0;
+
+    Path path = Path();
+
+    path.moveTo(0, 20);
+    path.quadraticBezierTo(0, 0, 20, 0);
+
+    path.lineTo(midX - (holeWidth / 2), 0);
+
+    path.cubicTo(
+      midX - (holeWidth / 2) + 15, 0,
+      midX - (holeWidth / 2) + 15, holeDepth,
+      midX, holeDepth,
     );
+
+    path.cubicTo(
+      midX + (holeWidth / 2) - 15, holeDepth,
+      midX + (holeWidth / 2) - 15, 0,
+      midX + (holeWidth / 2), 0,
+    );
+
+    path.lineTo(size.width - 20, 0);
+    path.quadraticBezierTo(size.width, 0, size.width, 20);
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+
+    canvas.drawShadow(path, Colors.black.withOpacity(0.1), 10, true);
+
+    canvas.drawPath(path, paint);
   }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
