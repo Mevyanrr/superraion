@@ -57,6 +57,7 @@ class MyApp extends StatelessWidget {
         splitScreenMode: true,
         builder: (context, child) {
           return MaterialApp(
+            navigatorKey: navigatorKey,
             title: 'Auth Hackathon',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
@@ -64,7 +65,7 @@ class MyApp extends StatelessWidget {
                scaffoldBackgroundColor: AppColors.bg,
               // primaryColor: AppColors.primary,
             ),
-            initialRoute: '/weekly',
+            initialRoute: '/splash',
 
             routes: {
               '/login': (context) => LoginPage(),
