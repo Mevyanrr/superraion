@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:superraion/features/auth/view/login.dart';
 import 'package:superraion/features/auth/view/registrasi.dart';
 
+import 'core/constants/app_color.dart';
 import 'features/auth/viewmodel/auth_view_model.dart';
 import 'features/onboarding/view/onboarding.dart';
 import 'features/onboarding/viewmodel/onboarding_viewmodel.dart';
@@ -32,10 +33,17 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               useMaterial3: true,
-              // scaffoldBackgroundColor: AppColors.background,
+               scaffoldBackgroundColor: AppColors.bg,
               // primaryColor: AppColors.primary,
             ),
-            home: RegisterPage(),
+            initialRoute: '/onboarding',
+
+            // daftar route
+            routes: {
+              '/login': (context) => LoginPage(),
+              '/register': (context) => const RegisterPage(),
+              '/onboarding': (context) => const OnboardingScreen(),
+            },
           );
         },
       ),
