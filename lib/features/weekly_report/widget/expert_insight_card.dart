@@ -14,7 +14,7 @@ Widget buildExpertInsight() {
       children: [
         Row(
           children: [
-            CircleAvatar(radius: 20.r, backgroundImage: const AssetImage("assets/images/doctor.png")),
+            CircleAvatar(radius: 20.r, backgroundImage: const AssetImage("assets/images/dokter.png")),
             SizedBox(width: 12.w),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

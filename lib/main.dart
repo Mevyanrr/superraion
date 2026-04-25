@@ -1,6 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_file.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:superraion/core/viewmodel/navbar_viewmodel.dart';
@@ -18,11 +16,16 @@ import 'features/auth/viewmodel/auth_view_model.dart';
 import 'features/log/viewmodel/log_viewmodel.dart';
 import 'features/onboarding/view/onboarding.dart';
 import 'features/onboarding/viewmodel/onboarding_viewmodel.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
+import 'features/splash/view/animated_splash_page.dart';
+import 'features/splash/view/initial_splash_page.dart';
+import 'features/splash/viewmodel/splash_viewmodel.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  //await initializeDateFormatting('id_ID', '');
+  await initializeDateFormatting('id_ID', null);
   runApp(const MyApp());
 }
 
@@ -35,8 +38,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => OnboardingViewModel()),
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
-        ChangeNotifierProvider(create: (_) => LogViewModel()),
-        ChangeNotifierProvider(create: (_) => FoodIntakeViewModel()),
+      ChangeNotifierProvider(create: (_) => LogViewModel()),
         ChangeNotifierProvider(create: (_) => DailyHabitViewModel()),
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
         ChangeNotifierProvider(create: (_) => NavbarViewModel()),
@@ -44,12 +46,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => WeeklySummaryViewModel()),
         ChangeNotifierProvider(create: (_) => BodyInsightViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileViewModel()),
-        ChangeNotifierProvider(create: (_) => WeeklySummaryViewModel()),
-        ChangeNotifierProvider(create: (_) => InsightViewModel()),
-        ChangeNotifierProvider(create: (_) => OnboardingViewModel()),
         ChangeNotifierProvider(create: (_) => WeeklyAnalysisViewModel()),
         ChangeNotifierProvider(create: (_) => WeeklyReportViewModel()),
         ChangeNotifierProvider(create: (_) => MedicalNoteViewModel()),
+        ChangeNotifierProvider(create: (_) => SplashViewModel()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 844),
@@ -62,8 +62,9 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               useMaterial3: true,
                scaffoldBackgroundColor: AppColors.bg,
+              // primaryColor: AppColors.primary,
             ),
-            initialRoute: '/profil',
+            initialRoute: '/weekly',
 
             routes: {
               '/login': (context) => LoginPage(),
@@ -73,6 +74,8 @@ class MyApp extends StatelessWidget {
               '/home': (context) => HomeView(),
               '/weekly': (context) => WeeklyReportPage(),
               '/profil': (context) => ProfileView(),
+              '/splash': (context) => InitialSplashPage(),
+              '/animated-splash': (context) => AnimatedSplashPage()
             },
           );
         },
@@ -80,3 +83,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
