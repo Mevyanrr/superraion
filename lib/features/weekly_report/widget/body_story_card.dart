@@ -15,11 +15,11 @@ class BodyStoryCard extends StatelessWidget {
       children: [
         Text(
           "Your Body Tells a Story",
-          style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1F2937)),
+          style: TextStyle(fontSize: 19.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1F2937)),
         ),
         SizedBox(height: 16.h),
         Container(
-          padding: EdgeInsets.all(18.w), // Padding sesuai Figma
+          padding: EdgeInsets.all(18.w),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(24.r),
@@ -30,13 +30,13 @@ class BodyStoryCard extends StatelessWidget {
             children: [
               Text(
                 "We've spotted patterns in your body, cycles, and daily habits this week.",
-                style: TextStyle(fontSize: 18.sp, color: const Color(0xFF1F2937)),
+                style: TextStyle(fontSize: 12.sp, color: const Color(0xFF1F2937)),
               ),
               SizedBox(height: 20.h),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 18.h),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF9FAFB), // Grey background AI area
+                  color: const Color(0xFFF9FAFB),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Consumer<BodyInsightViewModel>(
@@ -45,7 +45,7 @@ class BodyStoryCard extends StatelessWidget {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: vm.insights.length,
-                      separatorBuilder: (_, __) => SizedBox(height: 16.h), // Gap 10px-12px
+                      separatorBuilder: (_, __) => SizedBox(height: 16.h),
                       itemBuilder: (context, index) {
                         return _buildInsightRow(vm.insights[index]);
                       },
@@ -56,6 +56,8 @@ class BodyStoryCard extends StatelessWidget {
             ],
           ),
         ),
+
+
       ],
     );
   }
@@ -69,7 +71,7 @@ class BodyStoryCard extends StatelessWidget {
         Icon(
           isWarning ? Icons.error_outline_rounded : Icons.info_outline_rounded,
           color: isWarning ? const Color(0xFFF87171) : const Color(0xFF60A5FA),
-          size: 24.sp,
+          size: 20.sp,
         ),
         SizedBox(width: 14.w),
         Expanded(
@@ -92,7 +94,7 @@ class BodyStoryCard extends StatelessWidget {
       }
       children.add(TextSpan(
         text: match.group(1),
-        style: const TextStyle(fontWeight: FontWeight.bold),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12.sp),
       ));
       start = match.end;
     }
@@ -102,7 +104,7 @@ class BodyStoryCard extends StatelessWidget {
     }
 
     return TextSpan(
-      style: TextStyle(fontSize: 16.sp, color: const Color(0xFF374151), height: 1.4),
+      style: TextStyle(fontSize: 12.sp, color: const Color(0xFF374151), height: 1.4),
       children: children,
     );
   }
