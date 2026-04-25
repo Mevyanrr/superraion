@@ -72,9 +72,14 @@ class _LogState extends State<Log> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<LogViewModel>().reset();
-      context.read<FoodIntakeViewModel>().reset();
-      context.read<DailyHabitViewModel>().reset();
+      final args = ModalRoute.of(context)?.settings.arguments as Map?;
+      final fromRecent = args?['fromRecent'] == true;
+
+      if (!fromRecent) {
+        context.read<LogViewModel>().reset();
+        context.read<FoodIntakeViewModel>().reset();
+        context.read<DailyHabitViewModel>().reset();
+      }
     });
   }
 

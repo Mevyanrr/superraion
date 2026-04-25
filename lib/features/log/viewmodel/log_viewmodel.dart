@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../model/log_model.dart';
+import 'package:provider/provider.dart';
+import 'package:superraion/features/log/viewmodel/log_viewmodel.dart';
 
 class LogViewModel extends ChangeNotifier {
   DateTime _selectedDate = DateTime.now();
@@ -85,6 +89,71 @@ class LogViewModel extends ChangeNotifier {
     _selectedOptions.clear();
     notifyListeners();
   }
+
+  Future<void> loadLogByDate(String logDate) async {
+    final firestore = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      // Load water dari food_log
+      final foodSnap = await firestore
+          .collection('user_superraion')
+          .doc(user.uid)
+          .collection('food_log')
+          .where('log_date', isEqualTo: logDate)
+          .limit(1)
+          .get();
+
+      if (foodSnap.docs.isNotEmpty) {
+        final data = foodSnap.docs.first.data();
+        _currentMl = (data['water_ml'] ?? 0).toDouble();
+      }
+
+      // Load body signals dari symptom_log
+      final symptomSnap = await firestore
+          .collection('user_superraion')
+          .doc(user.uid)
+          .collection('symptom_log')
+          .where('log_date', isEqualTo: logDate)
+          .limit(1)
+          .get();
+
+      if (symptomSnap.docs.isNotEmpty) {
+        final data = symptomSnap.docs.first.data();
+        const indexMap = {
+          'Acne':           {'Clear': 0, 'Mild': 1, 'Severe': 2},
+          'Hair Loss':      {'Normal': 0, 'Increased': 1, 'Heavy': 2},
+          'Bloating Level': {'None': 0, 'Mild': 1, 'Severe': 2},
+          'Mood':           {'Stable': 0, 'Fluctuating': 1, 'Bad': 2},
+          'Energy Level':   {'High': 0, 'Okay': 1, 'Low': 2},
+          'Weight':         {'Stable': 0, 'Slight': 1, 'High': 2},
+          'Digestion':      {'Normal': 0, 'Irregular': 1, 'Diarrhea': 2},
+        };
+
+        final fieldMap = {
+          'Acne':           data['acne'],
+          'Hair Loss':      data['hair_loss'],
+          'Bloating Level': data['bloating_level'],
+          'Mood':           data['mood'],
+          'Energy Level':   data['energy_level'],
+          'Weight':         data['weight'],
+          'Digestion':      data['digestion'],
+        };
+
+        fieldMap.forEach((category, value) {
+          if (value != null) {
+            final idx = indexMap[category]?[value];
+            if (idx != null) _selectedOptions[category] = idx;
+          }
+        });
+      }
+
+      notifyListeners();
+    } catch (e) {
+      print('loadLogByDate error: $e');
+    }
+  }
 }
 
 
@@ -133,6 +202,35 @@ class FoodIntakeViewModel extends ChangeNotifier {
     detailsController.clear();
     notifyListeners();
   }
+  Future<void> loadFoodByDate(String logDate) async {
+    final firestore = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      final snap = await firestore
+          .collection('user_superraion')
+          .doc(user.uid)
+          .collection('food_log')
+          .where('log_date', isEqualTo: logDate)
+          .limit(1)
+          .get();
+
+      if (snap.docs.isNotEmpty) {
+        final data = snap.docs.first.data();
+        final categories = List<String>.from(data['categories'] ?? []);
+        final detail = data['detail'] as String? ?? '';
+
+        for (var cat in _categories) {
+          cat.isSelected = categories.contains(cat.name);
+        }
+        detailsController.text = detail;
+        notifyListeners();
+      }
+    } catch (e) {
+      print('loadFoodByDate error: $e');
+    }
+  }
 }
 
 // ─── HABIT ────────────────────────────────────────────
@@ -153,6 +251,57 @@ class DailyHabitViewModel extends ChangeNotifier {
       if (isSleepTime) _habit.sleepTime = picked;
       else _habit.wakeUpTime = picked;
       notifyListeners();
+    }
+  }
+
+  Future<void> loadHabitByDate(String logDate) async {
+    final firestore = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      final snap = await firestore
+          .collection('user_superraion')
+          .doc(user.uid)
+          .collection('habit_log')
+          .where('log_date', isEqualTo: logDate)
+          .limit(1)
+          .get();
+
+      if (snap.docs.isNotEmpty) {
+        final data = snap.docs.first.data();
+
+
+        final mulai = data['tidur_mulai'] as String? ?? '22:00';
+        final selesai = data['tidur_selesai'] as String? ?? '07:00';
+        final mulaiParts = mulai.split(':');
+        final selesaiParts = selesai.split(':');
+
+        _habit.sleepTime = TimeOfDay(
+          hour: int.parse(mulaiParts[0]),
+          minute: int.parse(mulaiParts[1]),
+        );
+        _habit.wakeUpTime = TimeOfDay(
+          hour: int.parse(selesaiParts[0]),
+          minute: int.parse(selesaiParts[1]),
+        );
+
+        // Stress
+        if (data['stresshigh'] != null) _habit.stressIndex = 2;
+        else if (data['moderate'] != null) _habit.stressIndex = 1;
+        else if (data['relaxed'] != null) _habit.stressIndex = 0;
+        else _habit.stressIndex = -1;
+
+        // Exercise
+        if (data['active'] != null) _habit.exerciseIndex = 0;
+        else if (data['light'] != null) _habit.exerciseIndex = 1;
+        else if (data['none'] != null) _habit.exerciseIndex = 2;
+        else _habit.exerciseIndex = -1;
+
+        notifyListeners();
+      }
+    } catch (e) {
+      print('loadHabitByDate error: $e');
     }
   }
 
@@ -211,26 +360,85 @@ class DailyHabitViewModel extends ChangeNotifier {
 }
 
 class RecentLogViewModel extends ChangeNotifier {
-
-  RecentLogModel? _recentLog = RecentLogModel(
-    mealName: "Chicken Salad",
-    timestamp: DateTime.now().subtract(const Duration(hours: 2)),
-  );
-
+  RecentLogModel? _recentLog;
   RecentLogModel? get recentLog => _recentLog;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  String? _recentLogDate;
+
+  final _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
+
+  Future<void> loadRecentLog() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return;
+
+      final snap = await _firestore
+          .collection('user_superraion')
+          .doc(user.uid)
+          .collection('food_log')
+          .orderBy('created_at', descending: true)
+          .limit(1)
+          .get();
+
+      if (snap.docs.isEmpty) {
+        _recentLog = null;
+      } else {
+        final data = snap.docs.first.data();
+        final categories = List<String>.from(data['categories'] ?? []);
+        final detail = data['detail'] as String? ?? '';
+        final createdAt = data['created_at'] != null
+            ? (data['created_at'] as Timestamp).toDate()
+            : DateTime.now();
+
+        final mealName = detail.isNotEmpty
+            ? detail
+            : categories.isNotEmpty
+            ? categories.join(', ')
+            : 'No food logged';
+
+        _recentLog = RecentLogModel(
+          mealName: mealName,
+          timestamp: createdAt,
+        );
+      }
+
+      if (snap.docs.isNotEmpty) {
+        final data = snap.docs.first.data();
+        _recentLogDate = data['log_date'] as String?;
+      }
+    } catch (e) {
+      print('loadRecentLog error: $e');
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
 
   String getTimeAgo() {
-    if (_recentLog == null) return "No logs yet";
+    if (_recentLog == null) return 'No logs yet';
     final diff = DateTime.now().difference(_recentLog!.timestamp);
-
-    if (diff.inHours >= 1) {
-      return "${diff.inHours} h ago";
-    } else {
-      return "${diff.inMinutes} m ago";
-    }
+    if (diff.inDays >= 1) return '${diff.inDays} d ago';
+    if (diff.inHours >= 1) return '${diff.inHours} h ago';
+    return '${diff.inMinutes} m ago';
   }
 
-  void navigateToDetail(BuildContext context) {
+  Future<void> navigateToDetail(BuildContext context) async {
+    if (_recentLog == null || _recentLogDate == null) return;
 
+
+    await Future.wait([
+      context.read<LogViewModel>().loadLogByDate(_recentLogDate!),
+      context.read<FoodIntakeViewModel>().loadFoodByDate(_recentLogDate!),
+      context.read<DailyHabitViewModel>().loadHabitByDate(_recentLogDate!),
+    ]);
+
+    if (!context.mounted) return;
+    Navigator.pushNamed(context, '/log', arguments: {'fromRecent': true});
   }
+
 }
