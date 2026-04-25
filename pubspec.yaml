@@ -115,6 +115,7 @@ flutter:
     - assets/images/exlight.png
     - assets/images/exnone.png
     - assets/images/dailyhabbit.png
+    - assets/images/mascot.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

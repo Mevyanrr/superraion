@@ -5,6 +5,7 @@ import 'package:superraion/features/log/widget/daily_habbit.dart';
 import 'package:superraion/features/log/widget/food.dart';
 
 import '../../../core/constants/app_color.dart';
+import '../../../core/widgets/popup.dart';
 import '../viewmodel/log_viewmodel.dart';
 import '../widget/water_intake.dart';
 import '../widget/body_signal.dart';
@@ -20,8 +21,8 @@ class Log extends StatelessWidget {
     },
     {
       "category": "Energy Level",
-      "labels": ["Low", "Okay", "High"],
-      "images": ["assets/images/energyhigh.png", "assets/images/energymed.png", "assets/images/energylow.png"]
+      "labels": ["High", "Okay", "Low"],
+      "images": ["assets/images/energylow.png", "assets/images/energymed.png", "assets/images/energyhigh.png"]
     },
     {
       "category": "Acne",
@@ -191,7 +192,10 @@ Widget _buildStartButton(BuildContext context) {
     width: double.infinity,
     child: ElevatedButton(
       onPressed: () {
-        // Navigator.pushReplacementNamed(context, '/login');
+        showDialog(
+          context: context,
+          builder: (context) => SavedPopupView(),
+        );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.pinkDark,

@@ -95,10 +95,10 @@ class DailyHabits extends StatelessWidget {
               decoration: BoxDecoration(
                 color: vm.getBgColor(i, isSelected),
                 borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: isSelected ? vm.getTextColor(i, true) : const Color(0xFFE5E7EB)),
+                // border: Border.all(color: isSelected ? vm.getTextColor(i, true) : const Color(0xFFE5E7EB)),
               ),
               child: Column(children: [
-                Image.asset("assets/images/${icons[i]}.png", width: 32.w, height: 32.h),
+                Image.asset("${icons[i]}", width: 32.w, height: 32.h),
                 SizedBox(height: 8.h),
                 Text(labels[i], style: TextStyle(fontSize: 11.sp, fontWeight: isSelected ? FontWeight.bold : FontWeight.w500, color: vm.getTextColor(i, isSelected))),
               ]),
