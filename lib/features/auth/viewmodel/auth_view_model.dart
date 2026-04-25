@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../service/auth/auth_service.dart';
 
 class AuthViewModel extends ChangeNotifier {
   // --- STATE VISIBILITY ---
@@ -88,11 +90,11 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   // --- VALIDATION LOGIC: LOGIN ---
-  bool validateLogin(String username, String pass) {
+  Future <bool> validateLogin(String email, String pass) async {
     bool isValid = true;
 
-    if (username.isEmpty) {
-      loginNameError = "Username tidak boleh kosong";
+    if (email.isEmpty) {
+      loginNameError = "Email tidak boleh kosong";
       isValid = false;
     }
 
@@ -104,17 +106,27 @@ class AuthViewModel extends ChangeNotifier {
       isValid = false;
     }
 
-    notifyListeners();
-    return isValid;
+
+
+    if (!isValid) return false;
+    try{
+      await AuthService().loginWithEmail(email, pass);
+      debugPrint("login Berhasil!");
+      return true;
+    }catch(e){
+      debugPrint("login Gagal");
+      return false;
+    }
+
   }
 
   // --- VALIDATION LOGIC: REGISTER ---
-  bool validateRegister({
+  Future <bool> validateRegister({
     required String name,
     required String email,
     required String password,
     required String confirmPassword,
-  }) {
+  }) async {
     bool isValid = true;
 
     if (name.isEmpty) {
@@ -127,10 +139,10 @@ class AuthViewModel extends ChangeNotifier {
       isValid = false;
     }
 
-    if (selectedBirthDate == null) {
-      regDateError = "Pilih tanggal lahir";
-      isValid = false;
-    }
+    // if (selectedBirthDate == null) {
+    //   regDateError = "Pilih tanggal lahir";
+    //   isValid = false;
+    // }
 
     if (password.length < 8) {
       regPasswordError = "Minimal 8 karakter";
@@ -144,12 +156,18 @@ class AuthViewModel extends ChangeNotifier {
 
     notifyListeners();
 
-    if (isValid) {
-      // Tambahkan logika API register di sini jika perlu
-      debugPrint("Register Berhasil!");
-    }
+    if (!isValid) return false;
+      try{
+        await AuthService().signUpWithEmail(name,email, password);
+        await FirebaseAuth.instance.currentUser?.reload();
+        await AuthService().saveUser(name, selectedBirthDate?? DateTime.now());
+        debugPrint("Register Berhasil!");
+        return true;
+      }catch(e){
+        debugPrint("Register Gagal");
+        return false;
+      }
 
-    return isValid;
   }
 
   // --- RESET STATE ---

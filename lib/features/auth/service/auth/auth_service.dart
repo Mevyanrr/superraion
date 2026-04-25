@@ -1,9 +1,9 @@
-import 'dart:math';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:superraion/user_model.dart';
+import 'package:superraion/features/auth/model/user_model.dart';
 
 class AuthService {
   final firebaseAuth = FirebaseAuth.instance;
@@ -22,17 +22,17 @@ class AuthService {
   }
 
 
-  Future<UserCredential> signUpWithEmail(UserModel usermodel) async {
+  Future<UserCredential> signUpWithEmail(String name, String email, String password) async {
     return await firebaseAuth.createUserWithEmailAndPassword(
-      email: usermodel.email,
-      password: usermodel.password,
+      email: email,
+      password: password,
     );
   }
 
-  Future<UserCredential> loginWithEmail(UserModel usermodel) async {
+  Future<UserCredential> loginWithEmail(String email, String password) async {
     return await firebaseAuth.signInWithEmailAndPassword(
-      email: usermodel.email,
-      password: usermodel.password,
+      email: email,
+      password: password,
     );
   }
 
@@ -114,19 +114,25 @@ class AuthService {
     return await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 
-  Future<void> saveUser(User user) async {
-    final userRef = firestore.collection('user_superraion').doc(user.uid);
+  Future<void> saveUser(String name, DateTime birthdate) async {
+    final user = firebaseAuth.currentUser;
+
+
+    final userRef = firestore.collection('user_superraion').doc(user?.uid);
     try{
       return userRef.set({
-        'uid': user.uid,
-        'email': user.email ?? "",
-        'phoneNumber': user.phoneNumber ?? "",
-        'displayName': user.displayName ?? "",
-        'photoURL': user.photoURL ?? "",
+        'uid': user?.uid,
+        'email': user?.email ?? "",
+        'displayName': name,
+        'birth_date': birthdate,
+        'photoURL': user?.photoURL ?? "",
         'lastSignIn': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+
+      }, SetOptions(merge: true)
+      );
+
     }catch(e){
-      log(e.toString() as num);
+      log("Error $e");
     }
   }
 }

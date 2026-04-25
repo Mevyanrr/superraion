@@ -71,8 +71,8 @@ class LoginPage extends StatelessWidget {
 
 
                     CustomTextField(
-                      label: "Username",
-                      hint: "Labubu",
+                      label: "Email",
+                      hint: "Labubu@gmail.com",
                       controller: nameController,
                       keyboardType: TextInputType.text, // Ubah ke text kalau login pakai username
                       activeColor: AppColors.primaryPink,
