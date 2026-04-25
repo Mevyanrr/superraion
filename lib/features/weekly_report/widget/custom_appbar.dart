@@ -25,7 +25,7 @@ class WeeklyAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () => Navigator.pop(context),
+            onTap: () => Navigator.pushReplacementNamed(context, '/home'),
             child: Container(
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(

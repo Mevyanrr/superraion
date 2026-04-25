@@ -8,6 +8,7 @@ import 'package:superraion/features/log/widget/recent_log.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/widgets/navbar.dart';
 import '../../log/viewmodel/log_viewmodel.dart';
+import '../../weekly_report/viewmodel/weekly_report.dart';
 import '../model/home_model.dart';
 import '../viewmodel/home_viewmodel.dart';
 
@@ -26,6 +27,7 @@ class _HomeViewState extends State<HomeView> {
       context.read<HomeViewModel>().loadFromFirestore();
       context.read<WeeklySummaryViewModel>().fetchWeeklyData();
       context.read<RecentLogViewModel>().loadRecentLog();
+      context.read<BodyInsightViewModel>().fetchAIInsights();
     });
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import '../../weekly_report/viewmodel/weekly_report.dart';
 import '../viewmodel/home_viewmodel.dart';
 
 class InsightCard extends StatelessWidget {
@@ -8,9 +9,21 @@ class InsightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Langsung Consumer, tidak perlu ChangeNotifierProvider lagi
-    return Consumer<InsightViewModel>(
-      builder: (context, vm, _) {
+    return Consumer2<InsightViewModel, BodyInsightViewModel>(
+      builder: (context, insightVm, bodyVm, _) {
+
+        final aiInsight = bodyVm.insights.isNotEmpty
+            ? bodyVm.insights.first
+            : null;
+
+        final title = aiInsight != null
+            ? aiInsight.text.split('\n').first // ambil headline
+            : "We noticed something";
+
+        final body = aiInsight != null
+            ? aiInsight.text.split('\n').skip(1).join('\n') // ambil explanation
+            : "You often experience breakouts 1–2 days after eating fried foods. Try reducing them and see how your skin responds.";
+
         return Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
@@ -22,21 +35,24 @@ class InsightCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.info_outline_rounded, color: Colors.blue, size: 24.sp),
+                  Icon(Icons.info_outline_rounded,
+                      color: Colors.blue, size: 24.sp),
                   SizedBox(width: 10.w),
-                  Text(
-                    "We noticed something",
-                    style: TextStyle(
-                      fontSize: 19.sp,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1F2937),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF1F2937),
+                      ),
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 12.h),
               Text(
-                "You often experience breakouts 1–2 days after eating fried foods. Try reducing them and see how your skin responds.",
+                body,
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: const Color(0xFF4B5563),
@@ -48,7 +64,7 @@ class InsightCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: () => vm.submitFeedback("Make Sense"),
+                      onPressed: () => insightVm.submitFeedback("Make Sense"),
                       icon: Icon(Icons.thumb_up_alt_outlined, size: 18.sp),
                       label: const Text("Make sense"),
                       style: ElevatedButton.styleFrom(
@@ -64,7 +80,7 @@ class InsightCard extends StatelessWidget {
                   SizedBox(width: 12.w),
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () => vm?.submitFeedback("Not Relevant"),
+                      onPressed: () => insightVm.submitFeedback("Not Relevant"),
                       icon: Icon(Icons.thumb_down_alt_outlined, size: 18.sp),
                       label: const Text("Not relevant"),
                       style: OutlinedButton.styleFrom(

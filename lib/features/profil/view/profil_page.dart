@@ -6,8 +6,21 @@ import '../../../core/widgets/navbar.dart';
 import '../viewmodel/profil_view_model.dart';
 import '../widget/profil_list.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
+
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileViewModel>().loadFromFirestore(); // ← tambah ini
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,27 +42,47 @@ class ProfileView extends StatelessWidget {
               SizedBox(height: 30.h),
 
               // User Info Section
-              Row(
-                children: [
-                  CircleAvatar(radius: 30.r, backgroundColor: Colors.grey[200]),
-                  SizedBox(width: 15.w),
-                  Consumer<ProfileViewModel>(builder: (context, vm, _) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          vm.userProfile?.name ?? "Kamilia Trisha",
-                          style: TextStyle(fontSize: 19.sp, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          vm.userProfile?.email ?? "kamilTrisha@gmail.com",
-                          style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-                        ),
-                      ],
-                    );
-                  })
-                ],
+              Consumer<ProfileViewModel>(
+                builder: (context, vm, _) {
+                  if (vm.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 30.r,
+                        backgroundColor: Colors.grey[200],
+                        backgroundImage: vm.userProfile?.avatarUrl != null &&
+                            vm.userProfile!.avatarUrl!.isNotEmpty
+                            ? NetworkImage(vm.userProfile!.avatarUrl!)
+                            : null,
+                        child: vm.userProfile?.avatarUrl == null ||
+                            vm.userProfile!.avatarUrl!.isEmpty
+                            ? Icon(Icons.person, size: 30.sp, color: Colors.grey)
+                            : null,
+                      ),
+                      SizedBox(width: 15.w),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            vm.userProfile?.name ?? 'User',
+                            style: TextStyle(
+                                fontSize: 19.sp, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            vm.userProfile?.email ?? '',
+                            style: TextStyle(
+                                fontSize: 12.sp, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
               ),
+
+              // ... sisanya sama persis tidak berubah
 
               SizedBox(height: 20.h),
 
