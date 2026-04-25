@@ -1,9 +1,13 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:superraion/user_model.dart';
 
 class AuthService {
   final firebaseAuth = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
   static final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
   static bool _isGoogleInitialized = false;
 
@@ -103,6 +107,26 @@ class AuthService {
         return Exception('Tidak ada koneksi internet.');
       default:
         return Exception(e.message ?? 'Terjadi kesalahan. Coba lagi.');
+    }
+  }
+
+  Future<void> resetPassword({required String email}) async {
+    return await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  }
+
+  Future<void> saveUser(User user) async {
+    final userRef = firestore.collection('user_superraion').doc(user.uid);
+    try{
+      return userRef.set({
+        'uid': user.uid,
+        'email': user.email ?? "",
+        'phoneNumber': user.phoneNumber ?? "",
+        'displayName': user.displayName ?? "",
+        'photoURL': user.photoURL ?? "",
+        'lastSignIn': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    }catch(e){
+      log(e.toString() as num);
     }
   }
 }
