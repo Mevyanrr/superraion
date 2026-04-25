@@ -143,6 +143,9 @@ flutter:
     - assets/images/mascot.png
     - assets/images/pencilmagic.png
     - assets/images/logoAplikasi.png
+    - assets/images/ohmygut.png
+    - assets/images/fotoprofil.png
+    - assets/images/dokter.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

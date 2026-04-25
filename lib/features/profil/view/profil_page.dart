@@ -31,7 +31,7 @@ class ProfileView extends StatelessWidget {
               // User Info Section
               Row(
                 children: [
-                  CircleAvatar(radius: 30.r, backgroundColor: Colors.grey[200]),
+                  CircleAvatar(radius: 30.r, backgroundImage: const AssetImage("assets/images/fotoprofil.png")),
                   SizedBox(width: 15.w),
                   Consumer<ProfileViewModel>(builder: (context, vm, _) {
                     return Column(
