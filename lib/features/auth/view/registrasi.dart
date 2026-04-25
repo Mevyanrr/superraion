@@ -58,7 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 children: [
                   SizedBox(height: 20.h),
                   Text(
-                    "Buat akun baru",
+                    "Create an Account",
                     style: TextStyle(
                       fontSize: 26.sp,
                       fontWeight: FontWeight.bold,
@@ -67,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    "Buat akun dengan menggunakan\nemail dan nomor telepon",
+                    "Sign up using your email and phone number",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 14.sp, color: AppColors.textBlack),
                   ),

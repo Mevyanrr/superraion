@@ -20,36 +20,44 @@ class LoginPage extends StatelessWidget {
           return SingleChildScrollView(
             child: Column(
               children: [
-                Stack(
-                  children: [
-                    Image.asset(
-                      'assets/images/vector.png',
-                      color: AppColors.pinkMedium,
-                      colorBlendMode: BlendMode.srcIn,
-                      scale: 0.8,
-                    ),
-                    Positioned(
-                        top: 0,
-                        left: 270,
-                        child: Image.asset('assets/images/Ellipse_51.png',
-                          color: AppColors.pinkMedium,
-                          colorBlendMode: BlendMode.srcIn,)),
-                    Positioned(
-                      bottom: 80,
-                      left: 10,
-                      child: Image.asset(
-                        'assets/images/Ellipse_53.png', color: AppColors.pinkMedium,
-                        colorBlendMode: BlendMode.srcIn,),
-                    ),
-                    Positioned(
-                        top: 75,
-                        left: 50,
+                SizedBox(
+                  child: Stack(
+                    children: [
+                      Image.asset(
+                        'assets/images/vector.png',
+                        color: AppColors.pinkMedium,
+                        colorBlendMode: BlendMode.srcIn,
+                        scale: 0.8,
+                      ),
+
+                      Positioned(
+                          top: 0,
+                          left: 270.w,
+                          child: Image.asset('assets/images/Ellipse_51.png',
+                            color: AppColors.pinkMedium,
+                            colorBlendMode: BlendMode.srcIn,)),
+                      Positioned(
+                        bottom: 80.h,
+                        left: 10.w,
                         child: Image.asset(
-                          'assets/images/nama_apps.png',
-                          scale: 0.8,
-                        )
-                    )
-                  ],
+                          'assets/images/Ellipse_53.png',
+                          color: AppColors.pinkMedium,
+                          colorBlendMode: BlendMode.srcIn,),
+                      ),
+
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.only(top: 107.h),
+                          child: Image.asset(
+                            'assets/images/ohmygut.png',
+                            width: 220.w,
+                            color: Color(0XFFF9FAFB),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
 
                 Padding(
@@ -57,13 +65,13 @@ class LoginPage extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                          "Selamat datang!",
+                          "Welcome Back!",
                           style: TextStyle(
                               fontSize: 28.sp, fontWeight: FontWeight.bold)
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                          "Silakan masuk menggunakan nomor\ntelepon yang sudah terdaftar",
+                          "Sign in to continue with your registered account",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 14.sp, color: AppColors.textBlack)
