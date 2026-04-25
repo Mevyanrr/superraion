@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../model/log/symptom_model.dart';
 
 class SymptomLog {
@@ -8,12 +7,12 @@ class SymptomLog {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   User? user;
 
-  Future<bool> saveSymptom(Map<String, String?> bodySignals) async {
+  Future<bool> saveSymptom(Map<String, String?> bodySignals, {required String logDate}) async {
     user = auth.currentUser;
     if (user == null) return false;
 
     try {
-      final model = SymptomModel.fromSignals(bodySignals);
+      final model = SymptomModel.fromSignals(bodySignals, logDate: logDate);
 
       await firestore
           .collection('user_superraion')
@@ -66,7 +65,7 @@ class SymptomLog {
           .collection('user_superraion')
           .doc(user!.uid)
           .collection('symptom_log')
-          .where('date', isEqualTo: date)
+          .where('log_date', isEqualTo: date)
           .limit(1)
           .get();
 

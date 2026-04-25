@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
-import 'package:superraion/features/log/model/log/habit_model.dart';
+import '../model/log/habit_model.dart';
 
 class HabitLog {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -12,6 +11,7 @@ class HabitLog {
     required String tidurMulai,
     required String tidurSelesai,
     required double durasiJam,
+    required String logDate,
     String? relaxed,
     String? moderate,
     String? stresshigh,
@@ -27,20 +27,20 @@ class HabitLog {
 
     try {
       final model = HabitModel(
-        tidurMulai: tidurMulai,
+        tidurMulai:   tidurMulai,
         tidurSelesai: tidurSelesai,
-        durasiJam: durasiJam,
-        logDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-        createdAt: DateTime.now(),
-        relaxed: relaxed,
-        moderate: moderate,
-        stresshigh: stresshigh,
-        stresslow: stresslow,
-        active: active,
-        light: light,
-        none: none,
-        energyhigh: energyhigh,
-        energylow: energylow,
+        durasiJam:    durasiJam,
+        logDate:      logDate,
+        createdAt:    DateTime.now(),
+        relaxed:      relaxed,
+        moderate:     moderate,
+        stresshigh:   stresshigh,
+        stresslow:    stresslow,
+        active:       active,
+        light:        light,
+        none:         none,
+        energyhigh:   energyhigh,
+        energylow:    energylow,
       );
 
       await firestore

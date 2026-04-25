@@ -79,7 +79,48 @@ flutter:
     - assets/images/vector.png
     - assets/images/vector2.png
     - assets/images/Ellipse_56.png
-    -
+    - assets/images/fb.png
+    - assets/images/google.png
+    - assets/images/apple.png
+    - assets/images/nextarrow.png
+    - assets/images/booting1.png
+    - assets/images/booting2.png
+    - assets/images/booting3.png
+    - assets/images/energylow.png
+    - assets/images/energymed.png
+    - assets/images/energyhigh.png
+    - assets/images/acnemild.png
+    - assets/images/acneclear.png
+    - assets/images/acnesevere.png
+    - assets/images/fluentfood.png
+    - assets/images/waterintake.png
+    - assets/images/bodysignal.png
+    - assets/images/moodstable.png
+    - assets/images/moodfluc.png
+    - assets/images/moodbad.png
+    - assets/images/hairnormal.png
+    - assets/images/hairincrease.png
+    - assets/images/hairheavy.png
+    - assets/images/weighthigh.png
+    - assets/images/weightslight.png
+    - assets/images/weightstable.png
+    - assets/images/poopdiare.png
+    - assets/images/poopireg.png
+    - assets/images/poopnormal.png
+    - assets/images/foodintake.png
+    - assets/images/dailyhabbit.png
+    - assets/images/bodysignal.png
+    - assets/images/caffeinhigh.png
+    - assets/images/caffeinelow.png
+    - assets/images/caffeinnone.png
+    - assets/images/stressrelax.png
+    - assets/images/stressmoderate.png
+    - assets/images/stresshigh.png
+    - assets/images/exactive.png
+    - assets/images/exlight.png
+    - assets/images/exnone.png
+    - assets/images/dailyhabbit.png
+    - assets/images/mascot.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

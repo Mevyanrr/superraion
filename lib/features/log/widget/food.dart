@@ -9,10 +9,7 @@ class FoodIntake extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => FoodIntakeViewModel(),
-      child: const FoodIntakeCard(),
-    );
+    return const FoodIntakeCard();
   }
 }
 
@@ -21,7 +18,7 @@ class FoodIntakeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<FoodIntakeViewModel>();
+    final vm = context.watch<FoodIntakeViewModel>();  // ← FoodIntakeViewModel
 
     return Container(
       width: 350.w,
@@ -29,16 +26,9 @@ class FoodIntakeCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: const Color(0xFFE8E8E8),
-          width: 0.5.w,
-        ),
+        border: Border.all(color: const Color(0xFFE8E8E8), width: 0.5.w),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 10.r,
-            offset: Offset(0, 4.h),
-          )
+          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10.r, offset: Offset(0, 4.h))
         ],
       ),
       child: Column(
@@ -47,20 +37,14 @@ class FoodIntakeCard extends StatelessWidget {
         children: [
           _buildHeader(),
           SizedBox(height: 20.h),
-          Text(
-            'Food Categories',
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF111827),
-            ),
-          ),
+          Text('Food Categories',
+              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: const Color(0xFF111827))),
           SizedBox(height: 12.h),
-          _buildCategoryWrap(viewModel),
+          _buildCategoryWrap(vm),
           SizedBox(height: 20.h),
           _buildDetailsLabel(),
           SizedBox(height: 8.h),
-          _buildTextField(viewModel),
+          _buildTextField(vm),
         ],
       ),
     );
@@ -69,20 +53,14 @@ class FoodIntakeCard extends StatelessWidget {
   Widget _buildHeader() {
     return Row(
       children: [
-    Container(
-    padding: EdgeInsets.all(10.w),
-    decoration: BoxDecoration(color: AppColors.pinkSoft, shape: BoxShape.circle),
-    child: Image.asset("assets/images/foodintake.png"),
-    ),
-        SizedBox(width: 10.w),
-        Text(
-          'Food Intake',
-          style: TextStyle(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF111827),
-          ),
+        Container(
+          padding: EdgeInsets.all(10.w),
+          decoration: BoxDecoration(color: AppColors.pinkSoft, shape: BoxShape.circle),
+          child: Image.asset("assets/images/foodintake.png"),
         ),
+        SizedBox(width: 10.w),
+        Text('Food Intake',
+            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: const Color(0xFF111827))),
       ],
     );
   }
@@ -122,19 +100,10 @@ class FoodIntakeCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: bgColor,
               borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(
-                color: borderColor,
-                width: 1.w,
-              ),
+              border: Border.all(color: borderColor, width: 1.w),
             ),
-            child: Text(
-              cat.name,
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w500,
-                color: textColor,
-              ),
-            ),
+            child: Text(cat.name,
+                style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: textColor)),
           ),
         );
       }),
@@ -145,19 +114,11 @@ class FoodIntakeCard extends StatelessWidget {
     return RichText(
       text: TextSpan(
         text: 'Add Food Details ',
-        style: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-          color: const Color(0xFF111827),
-        ),
+        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: const Color(0xFF111827)),
         children: [
           TextSpan(
             text: '(optional)',
-            style: TextStyle(
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w400,
-              color: const Color(0xFF9CA3AF),
-            ),
+            style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: const Color(0xFF9CA3AF)),
           ),
         ],
       ),
@@ -168,7 +129,7 @@ class FoodIntakeCard extends StatelessWidget {
     return TextField(
       controller: vm.detailsController,
       maxLines: 2,
-      style: TextStyle(fontSize: 14.sp), // Text input juga pake .sp
+      style: TextStyle(fontSize: 14.sp),
       decoration: InputDecoration(
         hintText: 'What are you eating?',
         hintStyle: TextStyle(fontSize: 14.sp, color: const Color(0xFFD1D5DB)),
@@ -176,17 +137,14 @@ class FoodIntakeCard extends StatelessWidget {
         fillColor: const Color(0xFFF9FAFB),
         contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: const Color(0xFFE5E7EB), width: 1.w),
-        ),
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(color: const Color(0xFFE5E7EB), width: 1.w)),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: const Color(0xFFE5E7EB), width: 1.w),
-        ),
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(color: const Color(0xFFE5E7EB), width: 1.w)),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: const Color(0xFFE91E63), width: 1.5.w),
-        ),
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(color: const Color(0xFFE91E63), width: 1.5.w)),
       ),
     );
   }

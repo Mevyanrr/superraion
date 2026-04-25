@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class WaterLogModel {
-  final double currentAmount; // dalam liter
-  final double goalAmount;    // 4.0 Liter
+  final double currentAmount;
+  final double goalAmount;
 
   WaterLogModel({required this.currentAmount, required this.goalAmount});
 }

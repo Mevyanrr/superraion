@@ -13,7 +13,7 @@ import 'features/onboarding/viewmodel/onboarding_viewmodel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => OnboardingViewModel()),
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
     ChangeNotifierProvider(create: (_) => LogViewModel()),
+        ChangeNotifierProvider(create: (_) => FoodIntakeViewModel()),
         ChangeNotifierProvider(create: (_) => DailyHabitViewModel()),
       ],
       child: ScreenUtilInit(
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
                scaffoldBackgroundColor: AppColors.bg,
               // primaryColor: AppColors.primary,
             ),
-            initialRoute: '/log',
+            initialRoute: '/login',
 
             // daftar route
             routes: {

@@ -8,7 +8,7 @@ class DailyHabits extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<DailyHabitViewModel>();
+    final vm = context.watch<DailyHabitViewModel>();  // ← DailyHabitViewModel
 
     return Container(
       width: 350.w,
@@ -30,12 +30,20 @@ class DailyHabits extends StatelessWidget {
           SizedBox(height: 12.h),
           _buildSleepPickers(vm, context),
           SizedBox(height: 10.h),
-          _buildCategory("Stress", ["Relaxed", "Moderate", "High"], ["assets/images/stressrelax.png", "assets/images/stressmoderate.png", "assets/images/stresshigh.png"], vm.habit.stressIndex, vm.setStress, vm),
+          _buildCategory("Stress",
+              ["Relaxed", "Moderate", "High"],
+              ["assets/images/stressrelax.png", "assets/images/stressmoderate.png", "assets/images/stresshigh.png"],
+              vm.habit.stressIndex, vm.setStress, vm),
           SizedBox(height: 10.h),
-          _buildCategory("Exercise", ["Active", "Light", "None"], ["assets/images/exactive.png", "assets/images/exlight.png", "assets/images/exnone.png"], vm.habit.exerciseIndex, vm.setExercise, vm),
+          _buildCategory("Exercise",
+              ["Active", "Light", "None"],
+              ["assets/images/exactive.png", "assets/images/exlight.png", "assets/images/exnone.png"],
+              vm.habit.exerciseIndex, vm.setExercise, vm),
           SizedBox(height: 10.h),
-          _buildCategory("Caffeine & Alcohol", ["None", "Low", "High"], ["assets/images/caffeinnone.png", "assets/images/caffeinelow.png", "assets/images/caffeinhigh.png"], vm.habit.caffeineIndex, vm.setCaffeine, vm),
-
+          _buildCategory("Caffeine & Alcohol",
+              ["None", "Low", "High"],
+              ["assets/images/caffeinnone.png", "assets/images/caffeinelow.png", "assets/images/caffeinhigh.png"],
+              vm.habit.caffeineIndex, vm.setCaffeine, vm),
         ],
       ),
     );
@@ -46,7 +54,8 @@ class DailyHabits extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(children: [
-          CircleAvatar(radius: 18.r, backgroundColor: const Color(0xFFF0EEF9), child: Image.asset("assets/images/dailyhabbit.png")),
+          CircleAvatar(radius: 18.r, backgroundColor: const Color(0xFFF0EEF9),
+              child: Image.asset("assets/images/dailyhabbit.png")),
           SizedBox(width: 10.w),
           Text("Daily Habits", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
         ]),
@@ -69,7 +78,9 @@ class DailyHabits extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
-          decoration: BoxDecoration(color: const Color(0xFFF3F4F6).withOpacity(0.5), borderRadius: BorderRadius.circular(16.r)),
+          decoration: BoxDecoration(
+              color: const Color(0xFFF3F4F6).withOpacity(0.5),
+              borderRadius: BorderRadius.circular(16.r)),
           child: Column(children: [
             Text(title, style: TextStyle(fontSize: 10.sp, color: Colors.grey[600])),
             SizedBox(height: 4.h),
@@ -80,7 +91,8 @@ class DailyHabits extends StatelessWidget {
     );
   }
 
-  Widget _buildCategory(String title, List<String> labels, List<String> icons, int? selected, Function(int) onSelect, DailyHabitViewModel vm) {
+  Widget _buildCategory(String title, List<String> labels, List<String> icons,
+      int? selected, Function(int) onSelect, DailyHabitViewModel vm) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _sectionTitle(title),
       SizedBox(height: 12.h),
@@ -95,12 +107,15 @@ class DailyHabits extends StatelessWidget {
               decoration: BoxDecoration(
                 color: vm.getBgColor(i, isSelected),
                 borderRadius: BorderRadius.circular(12.r),
-                // border: Border.all(color: isSelected ? vm.getTextColor(i, true) : const Color(0xFFE5E7EB)),
               ),
               child: Column(children: [
-                Image.asset("${icons[i]}", width: 32.w, height: 32.h),
+                Image.asset(icons[i], width: 32.w, height: 32.h),
                 SizedBox(height: 8.h),
-                Text(labels[i], style: TextStyle(fontSize: 11.sp, fontWeight: isSelected ? FontWeight.bold : FontWeight.w500, color: vm.getTextColor(i, isSelected))),
+                Text(labels[i],
+                    style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                        color: vm.getTextColor(i, isSelected))),
               ]),
             ),
           ),
@@ -109,16 +124,6 @@ class DailyHabits extends StatelessWidget {
     ]);
   }
 
-  Widget _sectionTitle(String t) => Text(t, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600));
-
-  Widget _buildSaveButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF87171), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)), padding: EdgeInsets.symmetric(vertical: 14.h), elevation: 0),
-        child: Text("Save Log", style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold)),
-      ),
-    );
-  }
+  Widget _sectionTitle(String t) =>
+      Text(t, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600));
 }
