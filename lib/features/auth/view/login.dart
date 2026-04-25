@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_color.dart';
-import '../../../core/widgets/custom_textfield.dart';
+import '../widget/custom_textfield.dart';
 import '../viewmodel/auth_view_model.dart';
 
 class LoginPage extends StatelessWidget {
