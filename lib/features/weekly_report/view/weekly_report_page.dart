@@ -27,6 +27,7 @@ class _WeeklyReportPageState extends State<WeeklyReportPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<BodyInsightViewModel>().fetchAIInsights();
+      context.read<WeeklyAnalysisViewModel>().fetchWeeklyAnalysis();
       context.read<MedicalNoteViewModel>().fetchMedicalNote();
       context.read<WeeklySummaryViewModel>().fetchWeeklyData();
     });

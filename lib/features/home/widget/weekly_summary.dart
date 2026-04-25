@@ -153,7 +153,9 @@ class WeeklySummaryCard extends StatelessWidget {
                   SizedBox(height: 20.h),
 //TOMBOL
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/weekly');
+                    },
                     style: OutlinedButton.styleFrom(
                       minimumSize: Size(double.infinity, 50.h),
                       side: BorderSide(color: AppColors.pinkMedium),

@@ -22,7 +22,7 @@ import 'features/onboarding/viewmodel/onboarding_viewmodel.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await initializeDateFormatting('id_ID', null);
+  //await initializeDateFormatting('id_ID', '');
   runApp(const MyApp());
 }
 
@@ -47,15 +47,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => WeeklySummaryViewModel()),
         ChangeNotifierProvider(create: (_) => InsightViewModel()),
         ChangeNotifierProvider(create: (_) => OnboardingViewModel()),
-        ChangeNotifierProvider(create: (_) => AuthViewModel()),
-        ChangeNotifierProvider(create: (_) => LogViewModel()),
-        ChangeNotifierProvider(create: (_) => DailyHabitViewModel()),
-        ChangeNotifierProvider(create: (_) => HomeViewModel()),
-        ChangeNotifierProvider(create: (_) => NavbarViewModel()),
-        ChangeNotifierProvider(create: (_) => RecentLogViewModel()),
-        ChangeNotifierProvider(create: (_) => WeeklySummaryViewModel()),
-        ChangeNotifierProvider(create: (_) => BodyInsightViewModel()),
-        ChangeNotifierProvider(create: (_) => ProfileViewModel()),
         ChangeNotifierProvider(create: (_) => WeeklyAnalysisViewModel()),
         ChangeNotifierProvider(create: (_) => WeeklyReportViewModel()),
         ChangeNotifierProvider(create: (_) => MedicalNoteViewModel()),
@@ -71,7 +62,6 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               useMaterial3: true,
                scaffoldBackgroundColor: AppColors.bg,
-              // primaryColor: AppColors.primary,
             ),
             initialRoute: '/profil',
 
