@@ -77,3 +77,10 @@ Insight yang diberikan hanya berupa pola dan kemungkinan.
 
 ---
 
+## 👥 Super raion de xiào róng dōu méi nǐ de tián
+- [@Trisha](https://www.linkedin.com/in/trisha-malina-hanim/) — Product Manager
+- [@Kamilia](https://www.linkedin.com/in/kamilia-luthfitah/) — UI/UX
+- [@Mevya](https://www.linkedin.com/in/mevyanajwa/) — FrontEnd
+- [@Novita](https://www.linkedin.com/in/novita-azka/) — AI
+- [@Septian](https://www.linkedin.com/in/septian-nuril-arifin/) — BackEnd
+
